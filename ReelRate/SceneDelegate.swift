@@ -14,14 +14,14 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
            guard let windowScene = (scene as? UIWindowScene) else { return }
         
-           // Create the UIWindow
+         
            window = UIWindow(windowScene: windowScene)
            
-           // Set the root view controller programmatically
-        let mainViewController = ViewController() // This is your custom view controller
+          
+        let mainViewController = MainViewController()
            window?.rootViewController = mainViewController
            
-           // Make the window visible
+         
            window?.makeKeyAndVisible()
        }
 
