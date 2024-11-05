@@ -6,10 +6,17 @@
 //
 
 import UIKit
+import Combine
 
 class MainViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
-    private let topSectionView = TopSectionView()
     
+    private var popularMovies: [Movie] {
+        return viewModel.popularMovies
+    }
+    
+    private let topSectionView = TopSectionView()
+    private var cancellables = Set<AnyCancellable>()
+    private var searchResults: [SearchResult] = []
     private let viewModel = MoviesViewModel()
       private var movies: [Movie] = []
     
@@ -23,7 +30,6 @@ class MainViewController: UIViewController, UICollectionViewDataSource, UICollec
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
-
     
     private let collectionView: UICollectionView = {
           let layout = UICollectionViewFlowLayout()
@@ -35,8 +41,6 @@ class MainViewController: UIViewController, UICollectionViewDataSource, UICollec
           collectionView.translatesAutoresizingMaskIntoConstraints = false
           return collectionView
       }()
-    
-       private var popularMovies: [String] = ["Movie 1", "Movie 2", "Movie 3", "Movie 4", "Movie 5"]
 
        override func viewDidLoad() {
            super.viewDidLoad()
@@ -44,32 +48,66 @@ class MainViewController: UIViewController, UICollectionViewDataSource, UICollec
            title = "Popular Right Now"
            view.addSubview(topSectionView)
            view.addSubview(collectionView)
-           
            collectionView.dataSource = self
            collectionView.delegate = self
-           
            collectionView.register(MovieCell.self, forCellWithReuseIdentifier: MovieCell.reuseIdentifier)
-           
            setupConstraints()
+           topSectionView.searchTextPublisher
+               .debounce(for: .milliseconds(300), scheduler: RunLoop.main)
+               .removeDuplicates()
+               .sink { [weak self] query in
+                   self?.performSearch(with: query)
+               }
+               .store(in: &cancellables)
+
+           viewModel.$searchResults
+               .sink { [weak self] results in
+                   self?.updateUI(with: results)
+               }
+               .store(in: &cancellables)
+                
+                viewModel.$searchResults
+                    .sink { [weak self] results in
+                        if !results.isEmpty {
+                            self?.updateUI(with: results)
+                        }
+                    }
+                    .store(in: &cancellables)
            
-//           APIManager.shared.makeRequest(endpoint: APIEndpoint.popularMovies.rawValue) { result in
-//               switch result {
-//               case .success(let data):
-//                   print(String(decoding: data, as: UTF8.self))
-//               case .failure(let error):
-//                   print("Error:", error.localizedDescription)
-//               }
-//           }
+           viewModel.$searchResults
+               .sink { [weak self] results in
+                   self?.updateUI(with: results)
+               }
+               .store(in: &cancellables)
            
-           viewModel.onMoviesUpdated = { [weak self] movies in
-                     self?.movies = movies
-                     self?.collectionView.reloadData()
-                 }
+                viewModel.fetchPopularMovies()
            
-           viewModel.fetchPopularMovies()
-           
+           viewModel.$popularMovies
+               .sink { [weak self] movies in
+                   print("Popular movies count:", movies.count)
+                   self?.collectionView.reloadData()
+               }
+               .store(in: &cancellables)
+
        }
        
+    private func performSearch(with query: String) {
+        if query.isEmpty {
+            searchResults = []
+            collectionView.reloadData()
+        } else {
+            viewModel.search(query: query)
+        }
+    }
+
+
+    
+    private func updateUI(with results: [SearchResult]) {
+        self.searchResults = results
+        self.collectionView.reloadData()
+    }
+    
+    
        private func setupConstraints() {
            topSectionView.translatesAutoresizingMaskIntoConstraints = false
            NSLayoutConstraint.activate([
@@ -86,33 +124,36 @@ class MainViewController: UIViewController, UICollectionViewDataSource, UICollec
        }
               
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-           return movies.count
-       }
-       
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MovieCell.reuseIdentifier, for: indexPath) as! MovieCell
-            let movie = movies[indexPath.item]
-            
-          
-            cell.configure(
-                with: movie.title,
-                image: nil,
-                genres: ["Genre1", "Genre2"]
-            )
-            
-        
-            if let posterURL = viewModel.posterURL(for: movie) {
-             
-            }
+        return searchResults.isEmpty ? popularMovies.count : searchResults.count
+    }
 
-            return cell
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MovieCell.reuseIdentifier, for: indexPath) as! MovieCell
+        
+        if searchResults.isEmpty {
+            let movie = popularMovies[indexPath.item]
+            cell.configure(
+                with: movie.title ?? "No title",
+                imageURL: viewModel.posterURL(for: movie)
+            )
+        } else {
+            let result = searchResults[indexPath.item]
+            cell.configure(
+                with: result.title ?? result.name ?? "No title",
+                imageURL: viewModel.posterURL(for: result)
+            )
         }
+        
+        return cell
+    }
        
        func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
            return CGSize(width: view.frame.width - 32, height: 150)
        }
-    
 }
 
 
+class ImageCache {
+    static let shared = NSCache<NSString, UIImage>()
+}
 

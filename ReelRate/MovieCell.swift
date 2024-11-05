@@ -46,13 +46,13 @@ class MovieCell: UICollectionViewCell {
         return label
     }()
     
-    private let posterImageView: UIImageView = {
+     let posterImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
         imageView.layer.cornerRadius = 8
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.backgroundColor = UIColor.yellow
+        imageView.backgroundColor = UIColor.clear
         return imageView
     }()
     
@@ -103,20 +103,24 @@ class MovieCell: UICollectionViewCell {
         stackView.translatesAutoresizingMaskIntoConstraints = false
         return stackView
     }()
+
+    func configure(with title: String, imageURL: URL?) {
+           titleLabel.text = title
+           posterImageView.image = UIImage(named: "placeholder")
+           loadImage(from: imageURL)
+       }
+
+       private func loadImage(from url: URL?) {
+           guard let url = url else { return }
+           URLSession.shared.dataTask(with: url) { [weak self] data, _, _ in
+               guard let self = self, let data = data, let image = UIImage(data: data) else { return }
+               DispatchQueue.main.async {
+                   self.posterImageView.image = image
+               }
+           }.resume()
+       }
     
-    func configure(with title: String, image: UIImage?, genres: [String]) {
-        titleLabel.text = title
-        posterImageView.image = image
-        
-        
-        genreStackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
-        
-        
-        for genre in genres.prefix(2) {
-            let label = createGenreLabel(with: genre)
-            genreStackView.addArrangedSubview(label)
-        }
-    }
+    
     
     private func createGenreLabel(with text: String) -> UILabel {
         let label = UILabel()

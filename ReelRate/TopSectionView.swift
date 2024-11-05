@@ -6,10 +6,9 @@
 //
 
 import UIKit
+import Combine
 
 class TopSectionView: UIView {
-
-
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.text = "Popular Right Now"
@@ -19,7 +18,6 @@ class TopSectionView: UIView {
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
-    
   
     private let searchField: UITextField = {
         let textField = UITextField()
@@ -36,17 +34,15 @@ class TopSectionView: UIView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
-       
         backgroundColor = UIColor.systemGreen
-        
-       
         addSubview(titleLabel)
         addSubview(searchField)
-        
-      
         setupConstraints()
+        searchField.addTarget(self, action: #selector(textDidChange), for: .editingChanged)
     }
+    
+    let searchTextPublisher = PassthroughSubject<String, Never>()
+    private var cancellables = Set<AnyCancellable>()
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -66,6 +62,11 @@ class TopSectionView: UIView {
             searchField.heightAnchor.constraint(equalToConstant: 40),
             searchField.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -16)
         ])
+    }
+    @objc private func textDidChange() {
+        if let text = searchField.text {
+            searchTextPublisher.send(text)
+        }
     }
 }
 
