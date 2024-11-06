@@ -10,6 +10,7 @@ import Foundation
 enum APIEndpoint: String {
     case authenticate = "authentication"
     case popularMovies = "movie/popular"
+    case genreList = "genre/movie/list"
 }
 
 class APIManager {
@@ -18,6 +19,8 @@ class APIManager {
     
     private let baseURL = "https://api.themoviedb.org/3"
     private let bearerToken = "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJiY2JmNzQwNDZhNWJkMGYyMWZmNzA0ZjYyMTM5ZTg4NyIsIm5iZiI6MTcyOTU5Mzk2NS44MDE1OTcsInN1YiI6IjY0MzBlYmI2MWY5OGQxMDJhNjJhYTk5YiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.DoZn8-d7WEM6NbcpQC0Oz8UdelWRpqi5F3F9TX3eDzY"
+    private(set) var genres: [Int: String] = [:]
+    
     func makeRequest(endpoint: String, method: String = "GET", completion: @escaping (Result<Data, Error>) -> Void) {
         guard let url = URL(string: "\(baseURL)/\(endpoint)") else {
             return
@@ -66,7 +69,7 @@ class APIManager {
         request.httpMethod = "GET"
         request.addValue("application/json", forHTTPHeaderField: "Accept")
         request.addValue("Bearer \(bearerToken)", forHTTPHeaderField: "Authorization")
-
+        
         URLSession.shared.dataTask(with: request) { data, response, error in
             if let error = error {
                 completion(.failure(error))
@@ -86,5 +89,39 @@ class APIManager {
                 completion(.failure(error))
             }
         }.resume()
+    }
+    
+    func fetchGenres(completion: @escaping (Result<[Int: String], Error>) -> Void) {
+        makeRequest(endpoint: APIEndpoint.genreList.rawValue) { [weak self] result in
+            switch result {
+            case .success(let data):
+                do {
+                    let response = try JSONDecoder().decode(GenreResponse.self, from: data)
+                    self?.genres = Dictionary(uniqueKeysWithValues: response.genres.map { ($0.id, $0.name) })
+                    
+                    completion(.success(self?.genres ?? [:]))
+                } catch {
+                    completion(.failure(error))
+                }
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
+    }
+    
+}
+
+struct GenreResponse: Codable {
+    let genres: [Genre]
+}
+
+struct Genre: Codable {
+    let id: Int
+    let name: String
+}
+
+extension APIManager {
+    var genreList: [Int: String] {
+        return genres
     }
 }
