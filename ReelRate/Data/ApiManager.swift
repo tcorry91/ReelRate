@@ -125,3 +125,26 @@ extension APIManager {
         return genres
     }
 }
+
+
+extension APIManager {
+    func getMovie(byID id: Int, completion: @escaping (Result<Movie, Error>) -> Void) {
+        let endpoint = "movie/\(id)"
+        makeRequest(endpoint: endpoint) { result in
+            switch result {
+            case .success(let data):
+                do {
+                    let decoder = JSONDecoder()
+                    decoder.keyDecodingStrategy = .convertFromSnakeCase 
+                    let movie = try decoder.decode(Movie.self, from: data)
+                    completion(.success(movie))
+                    print("data check in the api manager", movie)
+                } catch {
+                    completion(.failure(error))
+                }
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
+    }
+}

@@ -8,6 +8,7 @@
 import UIKit
 
 class RatingViewController: UIViewController, RatingButtonsViewDelegate {
+   
     var viewModel: MovieDetailViewModel!
     let ratingButtonsView = RatingButtonsView()
     override func viewDidLoad() {
@@ -17,6 +18,13 @@ class RatingViewController: UIViewController, RatingButtonsViewDelegate {
         ratingButtonsView.delegate = self
         configUI()
         print("Selected movie title within rating vc:", viewModel.title)
+        ratingButtonsView.mode = .currentRating
+        let favoriteImage = viewModel.isFavorited ? "FavouriteIconFilled" : "FavouriteIcon"
+           favoriteButton.setImage(UIImage(named: favoriteImage), for: .normal)
+           
+        print("RatingViewController loaded with movie ID:", viewModel.title)
+        
+        print("RatingVC ViewModel:", viewModel)
     }
     
     func configUI() {
@@ -42,7 +50,35 @@ class RatingViewController: UIViewController, RatingButtonsViewDelegate {
         titleLabel.text = viewModel.title
         
     }
+    
+    func didTapCurrentRating() {
+          presentPicker()
+      }
  
+    private func presentPicker() {
+        print("present picker")
+        let alert = UIAlertController(title: "Select Rating", message: "\n\n\n\n\n\n", preferredStyle: .alert)
+        
+        let picker = UIPickerView(frame: CGRect(x: 0, y: 0, width: 250, height: 140))
+        picker.dataSource = self
+        picker.delegate = self
+        alert.view.addSubview(picker)
+        
+        let selectAction = UIAlertAction(title: "Select", style: .default) { [weak self] _ in
+            let selectedRow = picker.selectedRow(inComponent: 0)
+            self?.updateRating(selectedRow + 1) // Assuming 1-based ratings
+            print("Selected row in picker:", selectedRow)
+        }
+        
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        
+        alert.addAction(selectAction)
+        alert.addAction(cancelAction)
+        
+        present(alert, animated: true)
+    }
+
+    
     func setupViews() {
         view.addSubview(backDropImageView)
         view.addSubview(titleLabel)
@@ -142,17 +178,68 @@ class RatingViewController: UIViewController, RatingButtonsViewDelegate {
 
     
     @objc func gotoFavouritesTapped() {
-        print("go fav tapped")
+        let favoritesViewModel = FavoritesViewModel()
+        let favoritesVC = FavoriteViewController(viewModel: favoritesViewModel)
+        navigationController?.pushViewController(favoritesVC, animated: true)
     }
+
     
     @objc private func favoriteButtonTapped() {
-        print("Favorite button tapped!")
-        favoriteButton.setImage(UIImage(named: "FavouriteIconFilled"), for: .normal)
+        guard let viewModel = viewModel else {
+            print("ViewModel is nil in RatingViewController!")
+            return
+        }
+        
+        print("Favorite button tapped in the Rating VC!")
+        
+        viewModel.toggleFavorite()
+        
+        let favoriteImage = viewModel.isFavorited ? "FavouriteIconFilled" : "FavouriteIcon"
+        favoriteButton.setImage(UIImage(named: favoriteImage), for: .normal)
     }
+
+
     
     func didTapRateButton() {
         print("rate tapped")
     }
+    
+    private func updateRating(_ rating: Int) {
+        print("Selected rating in RatingVC: \(rating)")
+        viewModel.updateRating(to: rating)
+        ratingButtonsView.rating = rating
+    }
+
+
+     func didTapeResetButton() {
+        print("reset button tapped")
+         ratingButtonsView.rating = 0
+    }
+    
+    func didTapFavourites() {
+        print("did tap faovurites in rating vc?")
+        
+    }
+    
+    
+    
+}
+
+
+extension RatingViewController: UIPickerViewDelegate, UIPickerViewDataSource {
+    func numberOfComponents(in pickerView: UIPickerView) -> Int {
+        return 1
+    }
+
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        return 10
+    }
+
+    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+        return "\(row + 1)"
+    }
+    
+    
     
 }
 

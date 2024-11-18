@@ -132,14 +132,29 @@ class MovieDetailViewModel {
     }
     
     func toggleFavorite() {
-        guard let movieID = movie.id else { return }
+        print("favourite top tapped")
+        guard let movieID = movie.id else {
+            print("Movie ID is nil in toggleFavorite")
+            return
+        }
+
         sessionDataManager.toggleFavoriteStatus(for: movieID)
+        print("Is movie favorited? \(sessionDataManager.isMovieFavorited(movieID: movieID))")
+
         isFavorited.toggle()
+        print("favourite tapped: isFavorited =", isFavorited)
     }
+
     
     func updateRating(to rating: Int) {
-        guard let movieID = movie.id else { return }
+        print("Attempting to update rating with movie:", movie)
+        guard let movieID = movie.id else {
+            print("Error: Movie ID is nil")
+            return
+        }
+        print("Updating rating to \(rating) for movie ID: \(movieID)")
         sessionDataManager.setRating(rating, for: movieID)
         userRating = rating
     }
+
 }

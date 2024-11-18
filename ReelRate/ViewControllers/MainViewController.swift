@@ -42,6 +42,12 @@ class MainViewController: UIViewController, UICollectionViewDataSource, UICollec
         return collectionView
     }()
     
+    @objc func gotoFavouritesTapped() {
+        let favoritesViewModel = FavoritesViewModel()
+        let favoritesVC = FavoriteViewController(viewModel: favoritesViewModel)
+        navigationController?.pushViewController(favoritesVC, animated: true)
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white

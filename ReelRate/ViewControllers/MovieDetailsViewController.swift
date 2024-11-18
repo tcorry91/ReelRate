@@ -9,10 +9,6 @@ import UIKit
 import Combine
 
 class MovieDetailsViewController: UIViewController, RatingButtonsViewDelegate {
-    
-    
-    
-    
     private let userScoreView = UserScoreView()
     var viewModel: MovieDetailViewModel!
     private var cancellables = Set<AnyCancellable>()
@@ -31,6 +27,9 @@ class MovieDetailsViewController: UIViewController, RatingButtonsViewDelegate {
         configureUI()
         bindViewModel()
         ratingButtonsView.delegate = self
+        ratingButtonsView.mode = .ratingAndFavorites
+        updateFavoriteButtonAppearance()
+        print("MovieDetailsViewController loaded with ViewModel:", viewModel ?? "nil")
     }
     
     private func bindViewModel() {
@@ -49,6 +48,7 @@ class MovieDetailsViewController: UIViewController, RatingButtonsViewDelegate {
     }
     
     @objc private func toggleFavorite() {
+        print("togglong favourites? what is this")
         viewModel.toggleFavorite()
     }
     
@@ -187,8 +187,33 @@ class MovieDetailsViewController: UIViewController, RatingButtonsViewDelegate {
     }()
     
     @objc private func favoriteButtonTapped() {
-        print("Favorite button tapped!")
-        favoriteButton.setImage(UIImage(named: "FavouriteIconFilled"), for: .normal)
+        guard let viewModel = viewModel else {
+            print("ViewModel is nil in favoriteButtonTapped!")
+            return
+        }
+
+        print("Favorite button tapped! in the movie data vc")
+
+        // Toggle the favorite state in the ViewModel
+        viewModel.toggleFavorite()
+
+        // Update the button appearance based on the new state
+        updateFavoriteButtonAppearance()
+    }
+
+
+    
+    private func updateFavoriteButtonAppearance() {
+        if viewModel.isFavorited {
+            favoriteButton.setImage(UIImage(named: "FavouriteIconFilled"), for: .normal)
+        } else {
+            favoriteButton.setImage(UIImage(named: "FavouriteIconOutline"), for: .normal)
+        }
+    }
+
+    
+    internal func didTapeResetButton() {
+        print("reset button tappeded")
     }
     
     
@@ -231,10 +256,23 @@ class MovieDetailsViewController: UIViewController, RatingButtonsViewDelegate {
         userScoreView.configure(with: viewModel.userScore)
         overviewTextLabel.text = viewModel.overview
     }
+  
+    @objc func gotoFavouritesTapped() {
+        let favoritesViewModel = FavoritesViewModel()
+        let favoritesVC = FavoriteViewController(viewModel: favoritesViewModel)
+        navigationController?.pushViewController(favoritesVC, animated: true)
+    }
+
+        
+    func didTapFavourites() {
+        let favoritesViewModel = FavoritesViewModel()
+        let favoritesVC = FavoriteViewController(viewModel: favoritesViewModel)
+        navigationController?.pushViewController(favoritesVC, animated: true)
+    }
     
+    func didTapCurrentRating() {
+        print("movie details vc didTap current rating make this optional?!")
+    }
     
-    
-    
-    
-    
+
 }
