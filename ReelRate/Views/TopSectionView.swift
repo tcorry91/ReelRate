@@ -14,21 +14,23 @@ class TopSectionView: UIView {
         label.text = "Popular Right Now"
         label.font = UIFont.systemFont(ofSize: 24, weight: .bold)
         label.textColor = .black
-        label.textAlignment = .center
+        label.textAlignment = .left
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
-  
+    
     private let searchField: UITextField = {
         let textField = UITextField()
-        textField.placeholder = "Search"
+        textField.attributedPlaceholder = NSAttributedString(
+            string: "Search",
+            attributes: [NSAttributedString.Key.foregroundColor: UIColor.black]
+        )
         textField.backgroundColor = UIColor(white: 1.0, alpha: 0.9)
-        textField.layer.cornerRadius = 8
-        textField.layer.masksToBounds = true
+        textField.layer.cornerRadius = 21
         textField.font = UIFont.systemFont(ofSize: 16)
         textField.translatesAutoresizingMaskIntoConstraints = false
         textField.textAlignment = .left
-        textField.setLeftPadding(10) 
+        textField.setLeftPadding(10)
         return textField
     }()
     
@@ -50,17 +52,14 @@ class TopSectionView: UIView {
     
     private func setupConstraints() {
         NSLayoutConstraint.activate([
-         
-            titleLabel.topAnchor.constraint(equalTo: topAnchor, constant: 16),
-            titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
-            titleLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
             
-           
-            searchField.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 12),
-            searchField.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
-            searchField.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
-            searchField.heightAnchor.constraint(equalToConstant: 40),
-            searchField.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -16)
+            searchField.topAnchor.constraint(equalTo: topAnchor, constant: 60),
+            searchField.leftAnchor.constraint(equalTo: leftAnchor, constant: 40),
+            searchField.heightAnchor.constraint(equalToConstant: 43),
+            searchField.rightAnchor.constraint(equalTo: rightAnchor, constant: -40),
+            
+            titleLabel.topAnchor.constraint(equalTo: searchField.bottomAnchor, constant: 50),
+            titleLabel.leftAnchor.constraint(equalTo: searchField.leftAnchor, constant: 40),
         ])
     }
     @objc private func textDidChange() {

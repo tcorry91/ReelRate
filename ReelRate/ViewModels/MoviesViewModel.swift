@@ -131,19 +131,24 @@ class MovieDetailViewModel {
         return URL(string: "https://image.tmdb.org/t/p/w500\(path)")
     }
     
+//    func toggleFavorite() {
+//        print("favourite top tapped")
+//        guard let movieID = movie.id else {
+//            print("Movie ID is nil in toggleFavorite")
+//            return
+//        }
+//
+//        sessionDataManager.toggleFavoriteStatus(for: movieID)
+//        print("Is movie favorited? \(sessionDataManager.isMovieFavorited(movieID: movieID))")
+//
+//        isFavorited.toggle()
+//        print("favourite tapped: isFavorited =", isFavorited)
+//    }
+    
     func toggleFavorite() {
-        print("favourite top tapped")
-        guard let movieID = movie.id else {
-            print("Movie ID is nil in toggleFavorite")
-            return
-        }
-
-        sessionDataManager.toggleFavoriteStatus(for: movieID)
-        print("Is movie favorited? \(sessionDataManager.isMovieFavorited(movieID: movieID))")
-
-        isFavorited.toggle()
-        print("favourite tapped: isFavorited =", isFavorited)
-    }
+           sessionDataManager.toggleFavoriteStatus(for: movie)
+           isFavorited.toggle()
+       }
 
     
     func updateRating(to rating: Int) {

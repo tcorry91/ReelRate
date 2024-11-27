@@ -12,7 +12,7 @@ import Combine
 class FavoriteViewController: UIViewController {
     private let viewModel: FavoritesViewModel
     private var cancellables: Set<AnyCancellable> = []
-    
+     
     private lazy var collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
@@ -42,8 +42,6 @@ class FavoriteViewController: UIViewController {
         setupUI()
         bindViewModel()
         viewModel.fetchFavorites()
-        print("data check", viewModel.favoriteMovies)
-        print("Poster Path for Movie:", viewModel.favoriteMovies.first?.posterPath ?? "No Poster Path")
     }
     
     private func setupUI() {
@@ -55,15 +53,12 @@ class FavoriteViewController: UIViewController {
             titleLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 120),
             titleLabel.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 20),
             
-            
-            
             collectionView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor),
             collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             collectionView.heightAnchor.constraint(equalToConstant: 250),
         ])
     }
-    
     
     let titleLabel: UILabel = {
         let label = UILabel()
@@ -85,28 +80,18 @@ class FavoriteViewController: UIViewController {
             }
             .store(in: &cancellables)
     }
-
-    
-  
 }
-
 
 extension FavoriteViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        print("Collection view item count:", viewModel.favoriteMovies.count)
         return viewModel.favoriteMovies.count
     }
-
+    
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "FavoriteCell", for: indexPath) as! FavoriteCell
         let movie = viewModel.favoriteMovies[indexPath.item]
-        
-        let userRating = viewModel.getRating(for: movie.id ?? 0) 
-        print("Configuring cell with movie:", movie.title ?? "No Title", "Poster Path:", movie.posterPath ?? "No Poster Path")
+        let userRating = viewModel.getRating(for: movie.id ?? 0)
         cell.configure(with: movie, userRating: userRating)
         return cell
     }
-
-
-
 }

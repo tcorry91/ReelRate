@@ -50,20 +50,35 @@ class FavoriteCell: UICollectionViewCell {
 
     }
     
+
+    
     func configure(with movie: Movie, userRating: Int?) {
-        if let posterPath = movie.posterPath {
-            let url = URL(string: "https://image.tmdb.org/t/p/w500\(posterPath)")
-            print("Constructed URL:", url?.absoluteString ?? "Invalid URL")
+        print("Configuring cell with movie: \(movie.title ?? "Unknown") Poster Path: \(movie.posterPath ?? "No poster path")")
+        
+        if let posterPath = movie.posterPath,
+           let url = URL(string: "https://image.tmdb.org/t/p/w500\(posterPath)") {
+            URLSession.shared.dataTask(with: url) { data, _, error in
+                if let error = error {
+                    print("Error loading image: \(error)")
+                    return
+                }
+                guard let data = data, let image = UIImage(data: data) else {
+                    print("Failed to decode image data")
+                    return
+                }
+                DispatchQueue.main.async {
+                    self.imageView.image = image
+                    print("Image loaded successfully for \(movie.title ?? "Unknown")")
+                }
+            }.resume()
         } else {
-            imageView.image = UIImage(named: "FavouriteIconFilled")
+            imageView.image = UIImage(named: "placeholder")
+            print("No poster path, using placeholder for \(movie.title ?? "Unknown")")
         }
         
-        if let rating = userRating {
-            ratingLabel.text = "\(rating)/10"
-        } else {
-            ratingLabel.text = "No Rating"
-        }
+        ratingLabel.text = userRating != nil ? "\(userRating!)/10" : "No Rating"
     }
+
 
     private func loadImage(from url: URL?) {
         guard let url = url else { return }

@@ -51,7 +51,6 @@ class MainViewController: UIViewController, UICollectionViewDataSource, UICollec
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
-        title = "Popular Right Now"
         view.addSubview(topSectionView)
         view.addSubview(collectionView)
         collectionView.dataSource = self
@@ -97,6 +96,12 @@ class MainViewController: UIViewController, UICollectionViewDataSource, UICollec
         fetchGenre()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.setNavigationBarHidden(true, animated: animated)
+    }
+
+    
     func fetchGenre() {
         print("fetching genre")
         APIManager.shared.fetchGenres { result in
@@ -120,6 +125,7 @@ class MainViewController: UIViewController, UICollectionViewDataSource, UICollec
     
     
     
+    
     private func updateUI(with results: [SearchResult]) {
         self.searchResults = results
         self.collectionView.reloadData()
@@ -132,7 +138,7 @@ class MainViewController: UIViewController, UICollectionViewDataSource, UICollec
             topSectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             topSectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             topSectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            topSectionView.heightAnchor.constraint(equalToConstant: 120),
+            topSectionView.heightAnchor.constraint(equalToConstant: 211),
             
             collectionView.topAnchor.constraint(equalTo: topSectionView.bottomAnchor, constant: 0),
             collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
@@ -147,7 +153,7 @@ class MainViewController: UIViewController, UICollectionViewDataSource, UICollec
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MovieCell.reuseIdentifier, for: indexPath) as! MovieCell
-        
+       
         if searchResults.isEmpty {
             let movie = popularMovies[indexPath.item]
             cell.configure(

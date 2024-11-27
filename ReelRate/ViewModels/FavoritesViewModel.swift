@@ -10,7 +10,7 @@ import Combine
 
 class FavoritesViewModel {
     @Published var favoriteMovies: [Movie] = []
-    private let sessionDataManager: SessionDataManager
+    private var sessionDataManager = SessionDataManager.shared
     private let apiManager: APIManager
     
     init(sessionDataManager: SessionDataManager = .shared, apiManager: APIManager = .shared) {
@@ -19,36 +19,8 @@ class FavoritesViewModel {
     }
     
     func fetchFavorites() {
-        let favoriteMovieIDs = sessionDataManager.getAllFavoritedMovies()
-        
-        guard !favoriteMovieIDs.isEmpty else {
-            favoriteMovies = []
-            return
-        }
-        
-        let group = DispatchGroup()
-        var movies: [Movie] = []
-        
-        for movieID in favoriteMovieIDs {
-            group.enter()
-            apiManager.getMovie(byID: movieID) { result in
-                switch result {
-                case .success(let movie):
-                    movies.append(movie)
-                    print("Fetched Movie:", movie.title ?? "No Title", "Poster Path:", movie.posterPath ?? "No Poster Path")
-                case .failure(let error):
-                    print("Error fetching movie: \(error)")
-                }
-                group.leave()
-            }
-        }
-        
-        group.notify(queue: .main) {
-            self.favoriteMovies = movies
-        }
-        
-        print("favourites data check", favoriteMovieIDs)
-    }
+          favoriteMovies = sessionDataManager.getAllFavoritedMovies()
+      }
     
     func getRating(for movieID: Int) -> Int? {
         print("Retrieved rating in fav view model", sessionDataManager.getRating(for: movieID))

@@ -207,7 +207,7 @@ class MovieDetailsViewController: UIViewController, RatingButtonsViewDelegate {
         if viewModel.isFavorited {
             favoriteButton.setImage(UIImage(named: "FavouriteIconFilled"), for: .normal)
         } else {
-            favoriteButton.setImage(UIImage(named: "FavouriteIconOutline"), for: .normal)
+            favoriteButton.setImage(UIImage(named: "FavoriteIcon"), for: .normal)
         }
     }
 

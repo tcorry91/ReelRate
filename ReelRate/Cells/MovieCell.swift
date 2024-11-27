@@ -58,8 +58,7 @@ class MovieCell: UICollectionViewCell {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
-        contentView.backgroundColor = UIColor(white: 0.95, alpha: 1) 
+        contentView.backgroundColor = UIColor.white
         contentView.layer.cornerRadius = 8
         contentView.layer.masksToBounds = true
         
