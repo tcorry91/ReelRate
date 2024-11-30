@@ -18,7 +18,7 @@ class TopSectionView: UIView {
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
-    
+
     private let searchField: UITextField = {
         let textField = UITextField()
         textField.attributedPlaceholder = NSAttributedString(
@@ -30,9 +30,10 @@ class TopSectionView: UIView {
         textField.font = UIFont.systemFont(ofSize: 16)
         textField.translatesAutoresizingMaskIntoConstraints = false
         textField.textAlignment = .left
-        textField.setLeftPadding(10)
+        textField.setLeftPadding(20) // Adjust this value for slight indentation
         return textField
     }()
+
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -77,3 +78,4 @@ private extension UITextField {
         self.leftViewMode = .always
     }
 }
+

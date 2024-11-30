@@ -103,10 +103,11 @@ class MovieCell: UICollectionViewCell {
         return stackView
     }()
 
-    func configure(with title: String, imageURL: URL?) {
+    func configure(with title: String, imageURL: URL?, date: String) {
            titleLabel.text = title
            posterImageView.image = UIImage(named: "placeholder")
            loadImage(from: imageURL)
+        dateLabel.text = date
        }
 
        private func loadImage(from url: URL?) {

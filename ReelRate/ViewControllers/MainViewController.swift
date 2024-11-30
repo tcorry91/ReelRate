@@ -158,13 +158,16 @@ class MainViewController: UIViewController, UICollectionViewDataSource, UICollec
             let movie = popularMovies[indexPath.item]
             cell.configure(
                 with: movie.title ?? "No title",
-                imageURL: viewModel.posterURL(for: movie)
+                imageURL: viewModel.posterURL(for: movie),
+                date: viewModel.year(for: movie) // Use the helper function
             )
         } else {
             let result = searchResults[indexPath.item]
+            let formattedDate = viewModel.year(for: result) // Use helper method for SearchResult
             cell.configure(
                 with: result.title ?? result.name ?? "No title",
-                imageURL: viewModel.posterURL(for: result)
+                imageURL: viewModel.posterURL(for: result),
+                date: formattedDate
             )
         }
         

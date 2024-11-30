@@ -112,9 +112,10 @@ class MovieDetailViewModel {
         return movie.voteAverage ?? 0.0
     }
     
+    
     var year: String {
         guard let releaseDate = movie.releaseDate, !releaseDate.isEmpty else { return "Unknown" }
-        return String(releaseDate.prefix(4))
+        return String(releaseDate.prefix(4)) // Extracts only the year
     }
     
     var genreNames: [String] {
@@ -131,26 +132,11 @@ class MovieDetailViewModel {
         return URL(string: "https://image.tmdb.org/t/p/w500\(path)")
     }
     
-//    func toggleFavorite() {
-//        print("favourite top tapped")
-//        guard let movieID = movie.id else {
-//            print("Movie ID is nil in toggleFavorite")
-//            return
-//        }
-//
-//        sessionDataManager.toggleFavoriteStatus(for: movieID)
-//        print("Is movie favorited? \(sessionDataManager.isMovieFavorited(movieID: movieID))")
-//
-//        isFavorited.toggle()
-//        print("favourite tapped: isFavorited =", isFavorited)
-//    }
-    
     func toggleFavorite() {
            sessionDataManager.toggleFavoriteStatus(for: movie)
            isFavorited.toggle()
        }
 
-    
     func updateRating(to rating: Int) {
         print("Attempting to update rating with movie:", movie)
         guard let movieID = movie.id else {
@@ -162,4 +148,16 @@ class MovieDetailViewModel {
         userRating = rating
     }
 
+}
+
+extension MoviesViewModel {
+    func year(for movie: Movie) -> String {
+        guard let releaseDate = movie.releaseDate, !releaseDate.isEmpty else { return "Unknown" }
+        return String(releaseDate.prefix(4)) // Extracts only the year
+    }
+    
+    func year(for result: SearchResult) -> String {
+          guard let releaseDate = result.releaseDate, !releaseDate.isEmpty else { return "Unknown" }
+          return String(releaseDate.prefix(4)) // Extracts only the year
+      }
 }
