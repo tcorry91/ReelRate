@@ -12,8 +12,8 @@ class TopSectionView: UIView {
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.text = "Popular Right Now"
-        label.font = UIFont.systemFont(ofSize: 24, weight: .bold)
-        label.textColor = .black
+        label.font = UIFont.systemFont(ofSize: 24, weight: .heavy)
+        label.textColor = .titleGreen
         label.textAlignment = .left
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -30,14 +30,14 @@ class TopSectionView: UIView {
         textField.font = UIFont.systemFont(ofSize: 16)
         textField.translatesAutoresizingMaskIntoConstraints = false
         textField.textAlignment = .left
-        textField.setLeftPadding(20) // Adjust this value for slight indentation
+        textField.setLeftPadding(20) 
         return textField
     }()
 
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        backgroundColor = UIColor.systemGreen
+        backgroundColor = UIColor.baseGreen
         addSubview(titleLabel)
         addSubview(searchField)
         setupConstraints()

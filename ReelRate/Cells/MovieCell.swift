@@ -100,15 +100,28 @@ class MovieCell: UICollectionViewCell {
         stackView.spacing = 8
         stackView.alignment = .center
         stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.backgroundColor = UIColor.clear
         return stackView
     }()
 
-    func configure(with title: String, imageURL: URL?, date: String) {
-           titleLabel.text = title
-           posterImageView.image = UIImage(named: "placeholder")
-           loadImage(from: imageURL)
+    func configure(with title: String, imageURL: URL?, date: String, genres: [String]) {
+        titleLabel.text = title
+        posterImageView.image = UIImage(named: "placeholder")
+        loadImage(from: imageURL)
         dateLabel.text = date
-       }
+
+      
+        genreStackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
+
+    
+        let limitedGenres = genres.prefix(2)
+        for genre in limitedGenres {
+            let genreLabel = createGenreLabel(with: genre)
+            genreStackView.addArrangedSubview(genreLabel)
+        }
+    }
+
+    
 
        private func loadImage(from url: URL?) {
            guard let url = url else { return }

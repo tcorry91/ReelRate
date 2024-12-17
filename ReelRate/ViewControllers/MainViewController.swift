@@ -114,6 +114,8 @@ class MainViewController: UIViewController, UICollectionViewDataSource, UICollec
         }
     }
     
+    
+    
     private func performSearch(with query: String) {
         if query.isEmpty {
             searchResults = []
@@ -123,9 +125,7 @@ class MainViewController: UIViewController, UICollectionViewDataSource, UICollec
         }
     }
     
-    
-    
-    
+
     private func updateUI(with results: [SearchResult]) {
         self.searchResults = results
         self.collectionView.reloadData()
@@ -153,26 +153,31 @@ class MainViewController: UIViewController, UICollectionViewDataSource, UICollec
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MovieCell.reuseIdentifier, for: indexPath) as! MovieCell
-       
+
+        
         if searchResults.isEmpty {
-            let movie = popularMovies[indexPath.item]
-            cell.configure(
-                with: movie.title ?? "No title",
-                imageURL: viewModel.posterURL(for: movie),
-                date: viewModel.year(for: movie) // Use the helper function
-            )
-        } else {
-            let result = searchResults[indexPath.item]
-            let formattedDate = viewModel.year(for: result) // Use helper method for SearchResult
-            cell.configure(
-                with: result.title ?? result.name ?? "No title",
-                imageURL: viewModel.posterURL(for: result),
-                date: formattedDate
-            )
-        }
+               let movie = popularMovies[indexPath.item]
+               let genres = viewModel.genreNames(for: movie)
+               cell.configure(
+                   with: movie.title ?? "No title",
+                   imageURL: viewModel.posterURL(for: movie),
+                   date: viewModel.year(for: movie),
+                   genres: genres
+               )
+           } else {
+               let result = searchResults[indexPath.item]
+               let formattedDate = viewModel.year(for: result)
+               cell.configure(
+                   with: result.title ?? result.name ?? "No title",
+                   imageURL: viewModel.posterURL(for: result),
+                   date: formattedDate,
+                   genres: []
+               )
+           }
         
         return cell
     }
+    
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let selectedMovie = popularMovies[indexPath.item]

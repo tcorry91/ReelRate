@@ -151,7 +151,7 @@ class MovieDetailsViewController: UIViewController, RatingButtonsViewDelegate {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 16, weight: .regular)
         label.textColor = .black
-        label.numberOfLines = 0 // Allows multiline for long overviews
+        label.numberOfLines = 0
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -159,7 +159,7 @@ class MovieDetailsViewController: UIViewController, RatingButtonsViewDelegate {
     private lazy var overviewStackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [overviewHeaderLabel, overviewTextLabel])
         stackView.axis = .vertical
-        stackView.spacing = 8 // Space between header and text
+        stackView.spacing = 8 
         stackView.translatesAutoresizingMaskIntoConstraints = false
         return stackView
     }()

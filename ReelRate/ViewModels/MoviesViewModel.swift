@@ -9,7 +9,8 @@ import UIKit
 import Combine
 
 class MoviesViewModel {
-    
+    @Published var genres: [Int: String] = [:]
+
     @Published var popularMovies: [Movie] = []
     @Published var searchResults: [SearchResult] = []
     private(set) var movies: [Movie] = [] {
@@ -21,6 +22,20 @@ class MoviesViewModel {
     
     var onMoviesUpdated: (([Movie]) -> Void)?
     func fetchPopularMovies() {
+        
+        APIManager.shared.fetchGenres { [weak self] result in
+            switch result {
+            case .success(let genres):
+                print("Fetched genres:", genres)
+                DispatchQueue.main.async {
+                    self?.genres = genres
+                }
+            case .failure(let error):
+                print("Failed to fetch genres:", error)
+            }
+        }
+        
+        
         APIManager.shared.makeRequest(endpoint: APIEndpoint.popularMovies.rawValue) { [weak self] result in
             switch result {
             case .success(let data):
@@ -89,6 +104,10 @@ class MoviesViewModel {
         }
         return movie.releaseDate ?? "Release date not found"
     }
+    
+    func genreNames(for movie: Movie) -> [String] {
+        return movie.genreIds?.compactMap { genres[$0] } ?? []
+    }
 }
 
 class MovieDetailViewModel {
@@ -115,11 +134,15 @@ class MovieDetailViewModel {
     
     var year: String {
         guard let releaseDate = movie.releaseDate, !releaseDate.isEmpty else { return "Unknown" }
-        return String(releaseDate.prefix(4)) // Extracts only the year
+        return String(releaseDate.prefix(4))
     }
     
     var genreNames: [String] {
         movie.genreIds?.compactMap { APIManager.shared.genres[$0] } ?? []
+    }
+    
+    func genreNames(for movie: Movie) -> [String] {
+        return movie.genreIds?.compactMap { APIManager.shared.genres[$0] } ?? []
     }
     
     var posterURL: URL? {
@@ -148,16 +171,29 @@ class MovieDetailViewModel {
         userRating = rating
     }
 
+   
+
+    
 }
 
 extension MoviesViewModel {
     func year(for movie: Movie) -> String {
         guard let releaseDate = movie.releaseDate, !releaseDate.isEmpty else { return "Unknown" }
-        return String(releaseDate.prefix(4)) // Extracts only the year
+        return String(releaseDate.prefix(4))
     }
     
     func year(for result: SearchResult) -> String {
           guard let releaseDate = result.releaseDate, !releaseDate.isEmpty else { return "Unknown" }
-          return String(releaseDate.prefix(4)) // Extracts only the year
+          return String(releaseDate.prefix(4))
       }
+}
+
+
+
+
+extension MoviesViewModel {
+//    func genreNames(for result: SearchResult) -> [String] {
+//        guard let genreIDs = result.genreIds else { return [] }
+//        return genreIDs.compactMap { APIManager.shared.genres[$0] }
+//    }
 }
