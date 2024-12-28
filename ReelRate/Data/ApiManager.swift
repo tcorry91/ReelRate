@@ -18,7 +18,10 @@ class APIManager {
     static let shared = APIManager()
     
     private let baseURL = "https://api.themoviedb.org/3"
-    private let bearerToken = "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJiY2JmNzQwNDZhNWJkMGYyMWZmNzA0ZjYyMTM5ZTg4NyIsIm5iZiI6MTcyOTU5Mzk2NS44MDE1OTcsInN1YiI6IjY0MzBlYmI2MWY5OGQxMDJhNjJhYTk5YiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.DoZn8-d7WEM6NbcpQC0Oz8UdelWRpqi5F3F9TX3eDzY"
+    private lazy var bearerToken: String = {
+          let env = Environment.load()
+          return env["BEARER_TOKEN"] ?? ""
+      }()
     private(set) var genres: [Int: String] = [:]
     
     func makeRequest(endpoint: String, method: String = "GET", completion: @escaping (Result<Data, Error>) -> Void) {
