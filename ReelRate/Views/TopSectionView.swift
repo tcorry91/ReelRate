@@ -12,7 +12,7 @@ class TopSectionView: UIView {
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.text = "Popular Right Now"
-        label.font = UIFont.systemFont(ofSize: 24, weight: .heavy)
+        label.font = UIFont.systemFont(ofSize: 32, weight: .heavy)
         label.textColor = .titleGreen
         label.textAlignment = .left
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -60,7 +60,7 @@ class TopSectionView: UIView {
             searchField.rightAnchor.constraint(equalTo: rightAnchor, constant: -40),
             
             titleLabel.topAnchor.constraint(equalTo: searchField.bottomAnchor, constant: 50),
-            titleLabel.leftAnchor.constraint(equalTo: searchField.leftAnchor, constant: 40),
+            titleLabel.leftAnchor.constraint(equalTo: searchField.leftAnchor, constant: 0),
         ])
     }
     @objc private func textDidChange() {

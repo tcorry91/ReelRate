@@ -108,6 +108,10 @@ class MoviesViewModel {
     func genreNames(for movie: Movie) -> [String] {
         return movie.genreIds?.compactMap { genres[$0] } ?? []
     }
+    
+    func genreNames(for result: SearchResult) -> [String] {
+         return result.genreIds?.compactMap { APIManager.shared.genres[$0] } ?? []
+     }
 }
 
 class MovieDetailViewModel {

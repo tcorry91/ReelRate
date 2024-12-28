@@ -75,6 +75,7 @@ struct SearchResult: Codable {
     let popularity: Double?
     let firstAirDate: String?
     let releaseDate: String?  
+    let genreIds: [Int]?
     
     enum CodingKeys: String, CodingKey {
         case id
@@ -89,6 +90,7 @@ struct SearchResult: Codable {
         case popularity
         case firstAirDate = "first_air_date"
         case releaseDate = "release_date"
+        case genreIds = "genre_ids"
     }
 }
 

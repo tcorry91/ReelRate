@@ -166,12 +166,14 @@ class MainViewController: UIViewController, UICollectionViewDataSource, UICollec
                )
            } else {
                let result = searchResults[indexPath.item]
+               let genres = viewModel.genreNames(for: result)
                let formattedDate = viewModel.year(for: result)
                cell.configure(
                    with: result.title ?? result.name ?? "No title",
                    imageURL: viewModel.posterURL(for: result),
                    date: formattedDate,
-                   genres: []
+                   genres: genres
+                 
                )
            }
         
