@@ -30,6 +30,20 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		B6A7963F2D20100C000C19C5 /* Exceptions for "ReelRate" folder in "ReelRateTests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Utilities/.env,
+			);
+			target = B6D087512CC7AABE00874E3D /* ReelRateTests */;
+		};
+		B6A796402D20100C000C19C5 /* Exceptions for "ReelRate" folder in "ReelRateUITests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Utilities/.env,
+			);
+			target = B6D0875B2CC7AABE00874E3D /* ReelRateUITests */;
+		};
 		B6D087642CC7AABE00874E3D /* Exceptions for "ReelRate" folder in "ReelRate" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
@@ -44,6 +58,8 @@
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
 				B6D087642CC7AABE00874E3D /* Exceptions for "ReelRate" folder in "ReelRate" target */,
+				B6A7963F2D20100C000C19C5 /* Exceptions for "ReelRate" folder in "ReelRateTests" target */,
+				B6A796402D20100C000C19C5 /* Exceptions for "ReelRate" folder in "ReelRateUITests" target */,
 			);
 			path = ReelRate;
 			sourceTree = "<group>";

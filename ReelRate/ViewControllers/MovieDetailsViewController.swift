@@ -191,18 +191,11 @@ class MovieDetailsViewController: UIViewController, RatingButtonsViewDelegate {
             print("ViewModel is nil in favoriteButtonTapped!")
             return
         }
-
         print("Favorite button tapped! in the movie data vc")
-
-        // Toggle the favorite state in the ViewModel
         viewModel.toggleFavorite()
-
-        // Update the button appearance based on the new state
         updateFavoriteButtonAppearance()
     }
 
-
-    
     private func updateFavoriteButtonAppearance() {
         if viewModel.isFavorited {
             favoriteButton.setImage(UIImage(named: "FavouriteIconFilled"), for: .normal)
@@ -210,12 +203,10 @@ class MovieDetailsViewController: UIViewController, RatingButtonsViewDelegate {
             favoriteButton.setImage(UIImage(named: "FavoriteIcon"), for: .normal)
         }
     }
-
     
     internal func didTapeResetButton() {
         print("reset button tappeded")
     }
-    
     
     private let posterImageView: UIImageView = {
         let imageView = UIImageView()
@@ -226,7 +217,6 @@ class MovieDetailsViewController: UIViewController, RatingButtonsViewDelegate {
         imageView.backgroundColor = UIColor.yellow
         return imageView
     }()
-    
     
     private func configureUI() {
         guard let viewModel = viewModel else { return }
@@ -273,6 +263,4 @@ class MovieDetailsViewController: UIViewController, RatingButtonsViewDelegate {
     func didTapCurrentRating() {
         print("movie details vc didTap current rating make this optional?!")
     }
-    
-
 }

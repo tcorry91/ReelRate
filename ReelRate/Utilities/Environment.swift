@@ -7,8 +7,6 @@
 
 import Foundation
 
-import Foundation
-
 class Environment {
     static func load() -> [String: String] {
         guard let path = Bundle.main.path(forResource: ".env", ofType: nil) else {

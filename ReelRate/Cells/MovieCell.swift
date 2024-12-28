@@ -46,7 +46,7 @@ class MovieCell: UICollectionViewCell {
         return label
     }()
     
-     let posterImageView: UIImageView = {
+    let posterImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
@@ -103,53 +103,43 @@ class MovieCell: UICollectionViewCell {
         stackView.backgroundColor = UIColor.clear
         return stackView
     }()
-
+    
     func configure(with title: String, imageURL: URL?, date: String, genres: [String]) {
         titleLabel.text = title
         posterImageView.image = UIImage(named: "placeholder")
         loadImage(from: imageURL)
         dateLabel.text = date
-
-      
         genreStackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
-
-    
         let limitedGenres = genres.prefix(2)
         for genre in limitedGenres {
             let genreLabel = createGenreLabel(with: genre)
             genreStackView.addArrangedSubview(genreLabel)
         }
     }
-
     
-
-       private func loadImage(from url: URL?) {
-           guard let url = url else { return }
-           URLSession.shared.dataTask(with: url) { [weak self] data, _, _ in
-               guard let self = self, let data = data, let image = UIImage(data: data) else { return }
-               DispatchQueue.main.async {
-                   self.posterImageView.image = image
-               }
-           }.resume()
-       }
-    
-    
+    private func loadImage(from url: URL?) {
+        guard let url = url else { return }
+        URLSession.shared.dataTask(with: url) { [weak self] data, _, _ in
+            guard let self = self, let data = data, let image = UIImage(data: data) else { return }
+            DispatchQueue.main.async {
+                self.posterImageView.image = image
+            }
+        }.resume()
+    }
     
     private func createGenreLabel(with text: String) -> UILabel {
         let label = UILabel()
-        label.text = text
+        label.text = "  \(text)  "
         label.font = UIFont.systemFont(ofSize: 14)
         label.textColor = .gray
         label.backgroundColor = UIColor(white: 0.9, alpha: 1)
         label.layer.cornerRadius = 10
         label.layer.masksToBounds = true
-        label.textAlignment = .center
+        label.textAlignment = .justified
         label.translatesAutoresizingMaskIntoConstraints = false
         label.heightAnchor.constraint(equalToConstant: 24).isActive = true
-        label.widthAnchor.constraint(greaterThanOrEqualToConstant: 50).isActive = true
         return label
     }
-    
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
