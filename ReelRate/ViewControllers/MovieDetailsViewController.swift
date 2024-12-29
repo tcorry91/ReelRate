@@ -24,6 +24,7 @@ class MovieDetailsViewController: UIViewController, RatingButtonsViewDelegate {
         super.viewDidLoad()
         view.backgroundColor = .white
         setupViews()
+        setupPosterCornerMask()
         configureUI()
         bindViewModel()
         ratingButtonsView.delegate = self
@@ -99,8 +100,8 @@ class MovieDetailsViewController: UIViewController, RatingButtonsViewDelegate {
         overviewStackView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -20).isActive = true
         
         view.addSubview(favoriteButton)
-        favoriteButton.bottomAnchor.constraint(equalTo: posterImageView.topAnchor, constant: -20).isActive = true
-        favoriteButton.rightAnchor.constraint(equalTo: posterImageView.rightAnchor, constant: 10).isActive = true
+        favoriteButton.bottomAnchor.constraint(equalTo: posterImageView.topAnchor, constant: 12).isActive = true
+        favoriteButton.leftAnchor.constraint(equalTo: posterImageView.rightAnchor, constant: 0).isActive = true
         favoriteButton.heightAnchor.constraint(equalToConstant: 48).isActive = true
         favoriteButton.widthAnchor.constraint(equalToConstant: 48).isActive = true
         
@@ -170,7 +171,7 @@ class MovieDetailsViewController: UIViewController, RatingButtonsViewDelegate {
         imageView.clipsToBounds = true
         imageView.layer.cornerRadius = 8
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.backgroundColor = UIColor.yellow
+        imageView.backgroundColor = UIColor.clear
         return imageView
     }()
     
@@ -208,15 +209,42 @@ class MovieDetailsViewController: UIViewController, RatingButtonsViewDelegate {
         print("reset button tappeded")
     }
     
+    
     private let posterImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
         imageView.clipsToBounds = true
-        imageView.layer.cornerRadius = 8
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.backgroundColor = UIColor.yellow
+        imageView.backgroundColor = UIColor.clear
         return imageView
     }()
+
+
+
+    private func setupPosterCornerMask() {
+        let cornerRadius: CGFloat = 40
+
+        DispatchQueue.main.async {
+    
+            let path = UIBezierPath(
+                roundedRect: self.posterImageView.bounds,
+                byRoundingCorners: [.topRight],
+                cornerRadii: CGSize(width: cornerRadius, height: cornerRadius)
+            )
+        
+            let mask = CAShapeLayer()
+            mask.path = path.cgPath
+            self.posterImageView.layer.mask = mask
+            let borderLayer = CAShapeLayer()
+            borderLayer.path = path.cgPath
+            borderLayer.fillColor = UIColor.clear.cgColor
+            borderLayer.strokeColor = UIColor.white.cgColor
+            borderLayer.lineWidth = 12
+            borderLayer.frame = self.posterImageView.bounds
+            self.posterImageView.layer.addSublayer(borderLayer)
+        }
+    }
+
     
     private func configureUI() {
         guard let viewModel = viewModel else { return }
