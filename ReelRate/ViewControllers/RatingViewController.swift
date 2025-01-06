@@ -8,23 +8,20 @@
 import UIKit
 
 class RatingViewController: UIViewController, RatingButtonsViewDelegate {
-   
+    
     var viewModel: MovieDetailViewModel!
     let ratingButtonsView = RatingButtonsView()
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .green
+        view.backgroundColor = .systemGreen
+        setupPosterCornerMask()
         setupViews()
         ratingButtonsView.delegate = self
         configUI()
         print("Selected movie title within rating vc:", viewModel.title)
         ratingButtonsView.mode = .currentRating
         let favoriteImage = viewModel.isFavorited ? "FavouriteIconFilled" : "FavouriteIcon"
-           favoriteButton.setImage(UIImage(named: favoriteImage), for: .normal)
-           
-        print("RatingViewController loaded with movie ID:", viewModel.title)
-        
-        print("RatingVC ViewModel:", viewModel)
+        favoriteButton.setImage(UIImage(named: favoriteImage), for: .normal)
     }
     
     func configUI() {
@@ -52,9 +49,9 @@ class RatingViewController: UIViewController, RatingButtonsViewDelegate {
     }
     
     func didTapCurrentRating() {
-          presentPicker()
-      }
- 
+        presentPicker()
+    }
+    
     private func presentPicker() {
         print("present picker")
         let alert = UIAlertController(title: "Select Rating", message: "\n\n\n\n\n\n", preferredStyle: .alert)
@@ -77,11 +74,12 @@ class RatingViewController: UIViewController, RatingButtonsViewDelegate {
         
         present(alert, animated: true)
     }
-
+    
     
     func setupViews() {
         view.addSubview(backDropImageView)
         view.addSubview(titleLabel)
+        view.addSubview(youRatedLabel)
         view.addSubview(posterImageView)
         view.addSubview(favoriteButton)
         view.addSubview(ratingButtonsView)
@@ -95,6 +93,9 @@ class RatingViewController: UIViewController, RatingButtonsViewDelegate {
             
             titleLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 100),
             titleLabel.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 28),
+            
+            youRatedLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 20),
+            youRatedLabel.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 28),
             
             posterImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: 0),
             posterImageView.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: 0),
@@ -111,10 +112,10 @@ class RatingViewController: UIViewController, RatingButtonsViewDelegate {
             ratingButtonsView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -48),
             ratingButtonsView.heightAnchor.constraint(equalToConstant: 60),
             
-            gotoFavouritesButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             gotoFavouritesButton.topAnchor.constraint(equalTo: ratingButtonsView.bottomAnchor, constant: 20),
-              gotoFavouritesButton.heightAnchor.constraint(equalToConstant: 50),
-              gotoFavouritesButton.widthAnchor.constraint(equalToConstant: 250)
+            gotoFavouritesButton.heightAnchor.constraint(equalToConstant: 50),
+            gotoFavouritesButton.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 50),
+            gotoFavouritesButton.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -50),
         ])
     }
     
@@ -122,21 +123,44 @@ class RatingViewController: UIViewController, RatingButtonsViewDelegate {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
         imageView.clipsToBounds = true
-        imageView.layer.cornerRadius = 8
+        imageView.layer.cornerRadius = 0
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.backgroundColor = UIColor.black
         return imageView
     }()
-   
+    
     private let posterImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
         imageView.clipsToBounds = true
-        imageView.layer.cornerRadius = 8
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.backgroundColor = UIColor.blue
+        imageView.backgroundColor = UIColor.clear
         return imageView
     }()
+    
+    private func setupPosterCornerMask() {
+        let cornerRadius: CGFloat = 40
+        
+        DispatchQueue.main.async {
+            
+            let path = UIBezierPath(
+                roundedRect: self.posterImageView.bounds,
+                byRoundingCorners: [.topRight],
+                cornerRadii: CGSize(width: cornerRadius, height: cornerRadius)
+            )
+            
+            let mask = CAShapeLayer()
+            mask.path = path.cgPath
+            self.posterImageView.layer.mask = mask
+            let borderLayer = CAShapeLayer()
+            borderLayer.path = path.cgPath
+            borderLayer.fillColor = UIColor.clear.cgColor
+            borderLayer.strokeColor = UIColor.white.cgColor
+            borderLayer.lineWidth = 12
+            borderLayer.frame = self.posterImageView.bounds
+            self.posterImageView.layer.addSublayer(borderLayer)
+        }
+    }
     
     private let titleLabel: UILabel = {
         let label = UILabel()
@@ -144,6 +168,15 @@ class RatingViewController: UIViewController, RatingButtonsViewDelegate {
         label.textColor = .white
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "Paw Patrol"
+        return label
+    }()
+ 
+    private let youRatedLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont.systemFont(ofSize: 20, weight: .bold)
+        label.textColor = .white
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = "You rated this"
         return label
     }()
     
@@ -158,7 +191,7 @@ class RatingViewController: UIViewController, RatingButtonsViewDelegate {
         button.addTarget(self, action: #selector(favoriteButtonTapped), for: .touchUpInside)
         return button
     }()
-
+    
     let gotoFavouritesButton: UIButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -175,14 +208,14 @@ class RatingViewController: UIViewController, RatingButtonsViewDelegate {
         
         return button
     }()
-
+    
     
     @objc func gotoFavouritesTapped() {
         let favoritesViewModel = FavoritesViewModel()
         let favoritesVC = FavoriteViewController(viewModel: favoritesViewModel)
         navigationController?.pushViewController(favoritesVC, animated: true)
     }
-
+    
     
     @objc private func favoriteButtonTapped() {
         guard let viewModel = viewModel else {
@@ -197,8 +230,8 @@ class RatingViewController: UIViewController, RatingButtonsViewDelegate {
         let favoriteImage = viewModel.isFavorited ? "FavouriteIconFilled" : "FavouriteIcon"
         favoriteButton.setImage(UIImage(named: favoriteImage), for: .normal)
     }
-
-
+    
+    
     
     func didTapRateButton() {
         print("rate tapped")
@@ -209,11 +242,11 @@ class RatingViewController: UIViewController, RatingButtonsViewDelegate {
         viewModel.updateRating(to: rating)
         ratingButtonsView.rating = rating
     }
-
-
-     func didTapeResetButton() {
+    
+    
+    func didTapeResetButton() {
         print("reset button tapped")
-         ratingButtonsView.rating = 0
+        ratingButtonsView.rating = 0
     }
     
     func didTapFavourites() {
@@ -230,15 +263,14 @@ extension RatingViewController: UIPickerViewDelegate, UIPickerViewDataSource {
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
         return 1
     }
-
+    
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
         return 10
     }
-
+    
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
         return "\(row + 1)"
     }
-    
     
     
 }

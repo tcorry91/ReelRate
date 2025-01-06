@@ -12,10 +12,9 @@ class MovieDetailsViewController: UIViewController, RatingButtonsViewDelegate {
     private let userScoreView = UserScoreView()
     var viewModel: MovieDetailViewModel!
     private var cancellables = Set<AnyCancellable>()
-    
     let ratingButtonsView = RatingButtonsView()
     private lazy var tinyTitleLabel = createLabel(fontSize: 24, weight: .bold)
-    private lazy var yearLabel = createLabel(fontSize: 18, weight: .regular, textColor: .darkGray)
+    private lazy var yearLabel = createLabel(fontSize: 15, weight: .light, textColor: .lightGray)
     private lazy var genreLabel = createLabel(fontSize: 14, weight: .medium, textColor: .systemGray)
     
     private let ratingLabel = UILabel()
@@ -59,7 +58,7 @@ class MovieDetailsViewController: UIViewController, RatingButtonsViewDelegate {
     
     func setupViews() {
         view.addSubview(backDropImageView)
-        backDropImageView.topAnchor.constraint(equalTo: view.topAnchor, constant: 0).isActive = true
+        backDropImageView.topAnchor.constraint(equalTo: view.topAnchor, constant: -7).isActive = true
         backDropImageView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 0).isActive = true
         backDropImageView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: 0).isActive = true
         backDropImageView.heightAnchor.constraint(equalToConstant: 240).isActive = true
@@ -88,20 +87,19 @@ class MovieDetailsViewController: UIViewController, RatingButtonsViewDelegate {
         
         view.addSubview(ratingButtonsView)
         ratingButtonsView.translatesAutoresizingMaskIntoConstraints = false
-        ratingButtonsView.topAnchor.constraint(equalTo: posterImageView.bottomAnchor, constant: 60).isActive = true
+        ratingButtonsView.topAnchor.constraint(equalTo: posterImageView.bottomAnchor, constant: 35).isActive = true
         ratingButtonsView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 37).isActive = true
         ratingButtonsView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -48).isActive = true
         ratingButtonsView.heightAnchor.constraint(equalToConstant: 60).isActive = true
         
-        
         view.addSubview(overviewStackView)
         overviewStackView.topAnchor.constraint(equalTo: ratingButtonsView.bottomAnchor, constant: 30).isActive = true
-        overviewStackView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 20).isActive = true
-        overviewStackView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -20).isActive = true
+        overviewStackView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 35).isActive = true
+        overviewStackView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -45).isActive = true
         
         view.addSubview(favoriteButton)
-        favoriteButton.bottomAnchor.constraint(equalTo: posterImageView.topAnchor, constant: 12).isActive = true
-        favoriteButton.leftAnchor.constraint(equalTo: posterImageView.rightAnchor, constant: 0).isActive = true
+        favoriteButton.bottomAnchor.constraint(equalTo: posterImageView.topAnchor, constant: 15).isActive = true
+        favoriteButton.leftAnchor.constraint(equalTo: posterImageView.rightAnchor, constant: -15).isActive = true
         favoriteButton.heightAnchor.constraint(equalToConstant: 48).isActive = true
         favoriteButton.widthAnchor.constraint(equalToConstant: 48).isActive = true
         
@@ -112,7 +110,6 @@ class MovieDetailsViewController: UIViewController, RatingButtonsViewDelegate {
         ratingVC.viewModel = self.viewModel
         navigationController?.pushViewController(ratingVC, animated: true)
     }
-    
     
     private func createLabel(fontSize: CGFloat, weight: UIFont.Weight, textColor: UIColor = .label) -> UILabel {
         let label = UILabel()
@@ -125,9 +122,11 @@ class MovieDetailsViewController: UIViewController, RatingButtonsViewDelegate {
     private lazy var mainStackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [tinyTitleLabel, yearLabel, genreLabel, userScoreView])
         stackView.axis = .vertical
-        stackView.spacing = 16
+        stackView.spacing = 8
         stackView.alignment = .leading
         stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.setCustomSpacing(4, after: tinyTitleLabel)
+        stackView.setCustomSpacing(10, after: genreLabel)
         return stackView
     }()
     
@@ -142,7 +141,7 @@ class MovieDetailsViewController: UIViewController, RatingButtonsViewDelegate {
     private let overviewHeaderLabel: UILabel = {
         let label = UILabel()
         label.text = "Overview"
-        label.font = UIFont.systemFont(ofSize: 28, weight: .bold)
+        label.font = UIFont.systemFont(ofSize: 20, weight: .bold)
         label.textColor = .black
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -160,7 +159,7 @@ class MovieDetailsViewController: UIViewController, RatingButtonsViewDelegate {
     private lazy var overviewStackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [overviewHeaderLabel, overviewTextLabel])
         stackView.axis = .vertical
-        stackView.spacing = 8 
+        stackView.spacing = 8
         stackView.translatesAutoresizingMaskIntoConstraints = false
         return stackView
     }()
@@ -196,7 +195,7 @@ class MovieDetailsViewController: UIViewController, RatingButtonsViewDelegate {
         viewModel.toggleFavorite()
         updateFavoriteButtonAppearance()
     }
-
+    
     private func updateFavoriteButtonAppearance() {
         if viewModel.isFavorited {
             favoriteButton.setImage(UIImage(named: "FavouriteIconFilled"), for: .normal)
@@ -209,7 +208,6 @@ class MovieDetailsViewController: UIViewController, RatingButtonsViewDelegate {
         print("reset button tappeded")
     }
     
-    
     private let posterImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
@@ -218,20 +216,18 @@ class MovieDetailsViewController: UIViewController, RatingButtonsViewDelegate {
         imageView.backgroundColor = UIColor.clear
         return imageView
     }()
-
-
-
+    
     private func setupPosterCornerMask() {
         let cornerRadius: CGFloat = 40
-
+        
         DispatchQueue.main.async {
-    
+            
             let path = UIBezierPath(
                 roundedRect: self.posterImageView.bounds,
                 byRoundingCorners: [.topRight],
                 cornerRadii: CGSize(width: cornerRadius, height: cornerRadius)
             )
-        
+            
             let mask = CAShapeLayer()
             mask.path = path.cgPath
             self.posterImageView.layer.mask = mask
@@ -244,7 +240,7 @@ class MovieDetailsViewController: UIViewController, RatingButtonsViewDelegate {
             self.posterImageView.layer.addSublayer(borderLayer)
         }
     }
-
+    
     
     private func configureUI() {
         guard let viewModel = viewModel else { return }
@@ -274,14 +270,14 @@ class MovieDetailsViewController: UIViewController, RatingButtonsViewDelegate {
         userScoreView.configure(with: viewModel.userScore)
         overviewTextLabel.text = viewModel.overview
     }
-  
+    
     @objc func gotoFavouritesTapped() {
         let favoritesViewModel = FavoritesViewModel()
         let favoritesVC = FavoriteViewController(viewModel: favoritesViewModel)
         navigationController?.pushViewController(favoritesVC, animated: true)
     }
-
-        
+    
+    
     func didTapFavourites() {
         let favoritesViewModel = FavoritesViewModel()
         let favoritesVC = FavoriteViewController(viewModel: favoritesViewModel)
