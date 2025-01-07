@@ -13,14 +13,14 @@ class RatingViewController: UIViewController, RatingButtonsViewDelegate {
     let ratingButtonsView = RatingButtonsView()
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemGreen
+        view.backgroundColor = .baseGreen
         setupPosterCornerMask()
         setupViews()
         ratingButtonsView.delegate = self
         configUI()
         print("Selected movie title within rating vc:", viewModel.title)
         ratingButtonsView.mode = .currentRating
-        let favoriteImage = viewModel.isFavorited ? "FavouriteIconFilled" : "FavouriteIcon"
+        let favoriteImage = viewModel.isFavorited ? "FavouriteIconFilled" : "FavoriteIcon"
         favoriteButton.setImage(UIImage(named: favoriteImage), for: .normal)
     }
     
@@ -42,7 +42,6 @@ class RatingViewController: UIViewController, RatingButtonsViewDelegate {
                 }
             }.resume()
         }
-        
         
         titleLabel.text = viewModel.title
         
@@ -74,8 +73,6 @@ class RatingViewController: UIViewController, RatingButtonsViewDelegate {
         
         present(alert, animated: true)
     }
-    
-    
     func setupViews() {
         view.addSubview(backDropImageView)
         view.addSubview(titleLabel)
@@ -102,10 +99,11 @@ class RatingViewController: UIViewController, RatingButtonsViewDelegate {
             posterImageView.heightAnchor.constraint(equalToConstant: 162),
             posterImageView.widthAnchor.constraint(equalToConstant: 120),
             
-            favoriteButton.bottomAnchor.constraint(equalTo: posterImageView.topAnchor, constant: 0),
-            favoriteButton.leftAnchor.constraint(equalTo: posterImageView.rightAnchor, constant: 0),
-            favoriteButton.widthAnchor.constraint(equalToConstant: 48),
+           
+            favoriteButton.bottomAnchor.constraint(equalTo: posterImageView.topAnchor, constant: 15),
+            favoriteButton.leftAnchor.constraint(equalTo: posterImageView.rightAnchor, constant: -15),
             favoriteButton.heightAnchor.constraint(equalToConstant: 48),
+            favoriteButton.widthAnchor.constraint(equalToConstant: 48),
             
             ratingButtonsView.topAnchor.constraint(equalTo: posterImageView.bottomAnchor, constant: 20),
             ratingButtonsView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 37),
@@ -253,9 +251,6 @@ class RatingViewController: UIViewController, RatingButtonsViewDelegate {
         print("did tap faovurites in rating vc?")
         
     }
-    
-    
-    
 }
 
 
