@@ -5,14 +5,14 @@
 //  Created by Corry Timothy on 14/11/2024.
 //
 
-
 import UIKit
 import Combine
 
 class FavoriteViewController: UIViewController {
     private let viewModel: FavoritesViewModel
     private var cancellables: Set<AnyCancellable> = []
-     
+    private let emptyFavouritesView = EmptyFavouritesView()
+
     private lazy var collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
@@ -48,6 +48,7 @@ class FavoriteViewController: UIViewController {
         view.backgroundColor = .white
         view.addSubview(titleLabel)
         view.addSubview(collectionView)
+        view.addSubview(emptyFavouritesView)
         
         NSLayoutConstraint.activate([
             titleLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 120),
@@ -57,8 +58,32 @@ class FavoriteViewController: UIViewController {
             collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             collectionView.heightAnchor.constraint(equalToConstant: 250),
+            
+            emptyFavouritesView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+                  emptyFavouritesView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+                  emptyFavouritesView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+                  emptyFavouritesView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+                  emptyFavouritesView.heightAnchor.constraint(equalToConstant: 100)
         ])
     }
+    
+
+
+    
+    private func bindViewModel() {
+        viewModel.$favoriteMovies
+            .receive(on: RunLoop.main)
+            .sink { [weak self] movies in
+                print("Movies updated in ViewModel:", movies)
+                self?.collectionView.reloadData()
+
+                self?.emptyFavouritesView.isHidden = !movies.isEmpty
+                self?.collectionView.isHidden = movies.isEmpty
+            }
+            .store(in: &cancellables)
+    }
+
+    
     
     let titleLabel: UILabel = {
         let label = UILabel()
@@ -71,15 +96,7 @@ class FavoriteViewController: UIViewController {
         return label
     }()
     
-    private func bindViewModel() {
-        viewModel.$favoriteMovies
-            .receive(on: RunLoop.main)
-            .sink { [weak self] movies in
-                print("Movies updated in ViewModel:", movies)
-                self?.collectionView.reloadData()
-            }
-            .store(in: &cancellables)
-    }
+  
 }
 
 extension FavoriteViewController: UICollectionViewDataSource {

@@ -98,7 +98,6 @@ class RatingViewController: UIViewController, RatingButtonsViewDelegate {
             posterImageView.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: 0),
             posterImageView.heightAnchor.constraint(equalToConstant: 162),
             posterImageView.widthAnchor.constraint(equalToConstant: 120),
-            
            
             favoriteButton.bottomAnchor.constraint(equalTo: posterImageView.topAnchor, constant: 15),
             favoriteButton.leftAnchor.constraint(equalTo: posterImageView.rightAnchor, constant: -15),
