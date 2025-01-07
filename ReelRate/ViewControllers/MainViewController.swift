@@ -8,6 +8,7 @@
 import UIKit
 import Combine
 
+//TODO: make this a tableview NOT a collectionview
 class MainViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
     private var popularMovies: [Movie] {

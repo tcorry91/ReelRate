@@ -39,6 +39,7 @@ class FavoriteViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        addCustomBackButton()
         setupUI()
         bindViewModel()
         viewModel.fetchFavorites()
@@ -61,9 +62,9 @@ class FavoriteViewController: UIViewController {
             
             emptyFavouritesView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
                   emptyFavouritesView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-                  emptyFavouritesView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-                  emptyFavouritesView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-                  emptyFavouritesView.heightAnchor.constraint(equalToConstant: 100)
+//                  emptyFavouritesView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+//                  emptyFavouritesView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+//                  emptyFavouritesView.heightAnchor.constraint(equalToConstant: 100)
         ])
     }
     

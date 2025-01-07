@@ -14,6 +14,7 @@ class RatingViewController: UIViewController, RatingButtonsViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .baseGreen
+        addCustomBackButton()
         setupPosterCornerMask()
         setupViews()
         ratingButtonsView.delegate = self

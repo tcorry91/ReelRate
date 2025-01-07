@@ -8,17 +8,29 @@
 import UIKit
 
 
+
 class EmptyFavouritesView: UIView {
     
     private let messageLabel: UILabel = {
         let label = UILabel()
-        label.text = "You have no favourites"
-        label.font = UIFont.systemFont(ofSize: 18, weight: .medium)
-        label.textColor = .gray
+        let text = "You have no favourites\nFavourite a movie to add it to this list."
+        let paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.lineSpacing = 8
+        let attributedString = NSAttributedString(
+            string: text,
+            attributes: [
+                .paragraphStyle: paragraphStyle,
+                .font: UIFont.systemFont(ofSize: 16, weight: .bold),
+                .foregroundColor: UIColor.lightGray
+            ]
+        )
+        label.attributedText = attributedString
         label.textAlignment = .center
         label.translatesAutoresizingMaskIntoConstraints = false
+        label.numberOfLines = 0
         return label
     }()
+
     
     override init(frame: CGRect) {
         super.init(frame: frame)

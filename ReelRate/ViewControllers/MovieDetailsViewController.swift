@@ -22,6 +22,7 @@ class MovieDetailsViewController: UIViewController, RatingButtonsViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
+        addCustomBackButton()
         setupViews()
         setupPosterCornerMask()
         configureUI()
