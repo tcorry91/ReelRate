@@ -7,33 +7,32 @@
 
 import UIKit
 
+import UIKit
+
 class CustomBackButton: UIButton {
     
   
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        setupButton()
-    }
+    init(title: String, textColor: UIColor = .white) {
+            super.init(frame: .zero)
+            setupButton(title: title, textColor: textColor)
+        }
     
     required init?(coder: NSCoder) {
-        super.init(coder: coder)
-        setupButton()
+        fatalError("init(coder:) has not been implemented")
     }
     
-
-    private func setupButton() {
-    
-        setTitle("<   Back to Search", for: .normal)
-        setTitleColor(.white, for: .normal)
-        titleLabel?.font = UIFont.systemFont(ofSize: 9, weight: .medium)
+   
+    private func setupButton(title: String, textColor: UIColor) {
+        setTitle(title, for: .normal)
+        setTitleColor(textColor, for: .normal)
+        titleLabel?.font = UIFont.systemFont(ofSize: 10, weight: .light)
         backgroundColor = UIColor(white: 1.0, alpha: 0.3)
         layer.cornerRadius = 11
         clipsToBounds = true
-        
     }
     
-    
-    func addPopAction(to viewController: UIViewController) {
-        addTarget(viewController, action: #selector(viewController.handleBackButtonTapped), for: .touchUpInside)
+   
+    func addAction(to viewController: UIViewController, targetVC: MainViewController.Type) {
+        addTarget(viewController, action: #selector(viewController.handleBackToMainTapped), for: .touchUpInside)
     }
 }

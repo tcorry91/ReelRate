@@ -102,7 +102,6 @@ class MainViewController: UIViewController, UICollectionViewDataSource, UICollec
         navigationController?.setNavigationBarHidden(true, animated: animated)
     }
 
-    
     func fetchGenre() {
         print("fetching genre")
         APIManager.shared.fetchGenres { result in
@@ -114,8 +113,6 @@ class MainViewController: UIViewController, UICollectionViewDataSource, UICollec
             }
         }
     }
-    
-    
     
     private func performSearch(with query: String) {
         if query.isEmpty {

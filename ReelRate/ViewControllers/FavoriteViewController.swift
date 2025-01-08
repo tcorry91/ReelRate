@@ -39,7 +39,7 @@ class FavoriteViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        addCustomBackButton()
+        addCustomBackButton(title: "<  Back", textColor: UIColor.black)
         setupUI()
         bindViewModel()
         viewModel.fetchFavorites()
@@ -47,57 +47,89 @@ class FavoriteViewController: UIViewController {
     
     private func setupUI() {
         view.backgroundColor = .white
+        view.addSubview(colorBanner)
         view.addSubview(titleLabel)
         view.addSubview(collectionView)
         view.addSubview(emptyFavouritesView)
-        
+        view.addSubview(searchForMoreButton)
         NSLayoutConstraint.activate([
-            titleLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 120),
-            titleLabel.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 20),
+            colorBanner.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 0),
+            colorBanner.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 0),
+            colorBanner.rightAnchor.constraint(equalTo: view.rightAnchor, constant: 0),
+            colorBanner.heightAnchor.constraint(equalToConstant: 84),
             
-            collectionView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor),
+            titleLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 110),
+            titleLabel.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 35),
+            titleLabel.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -35),
+            
+            collectionView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 20),
             collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            collectionView.heightAnchor.constraint(equalToConstant: 250),
+            collectionView.heightAnchor.constraint(equalToConstant: 245),
             
             emptyFavouritesView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
                   emptyFavouritesView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-//                  emptyFavouritesView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-//                  emptyFavouritesView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-//                  emptyFavouritesView.heightAnchor.constraint(equalToConstant: 100)
+            
+            searchForMoreButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -90),
+            searchForMoreButton.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 55),
+            searchForMoreButton.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -55),
+            searchForMoreButton.heightAnchor.constraint(equalToConstant: 56),
+            
+            
         ])
+        view.sendSubviewToBack(colorBanner)
     }
-    
-
-
-    
+ 
     private func bindViewModel() {
         viewModel.$favoriteMovies
             .receive(on: RunLoop.main)
             .sink { [weak self] movies in
-                print("Movies updated in ViewModel:", movies)
                 self?.collectionView.reloadData()
-
                 self?.emptyFavouritesView.isHidden = !movies.isEmpty
                 self?.collectionView.isHidden = movies.isEmpty
             }
             .store(in: &cancellables)
     }
-
-    
     
     let titleLabel: UILabel = {
         let label = UILabel()
         label.text = "My Favourites"
-        label.font = UIFont.systemFont(ofSize: 24, weight: .bold)
+        label.font = UIFont.systemFont(ofSize: 48, weight: .bold)
         label.textColor = .black
         label.textAlignment = .center
         label.numberOfLines = 1
         label.translatesAutoresizingMaskIntoConstraints = false
+        label.numberOfLines = 0
         return label
     }()
     
+    private let colorBanner: UIView = {
+        let banner = UIView()
+        banner.backgroundColor = .baseGreen
+        banner.translatesAutoresizingMaskIntoConstraints = false
+        return banner
+    }()
   
+    let searchForMoreButton: UIButton = {
+        let button = UIButton()
+        button.clipsToBounds = true
+        button.layer.cornerRadius = 28
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.backgroundColor = UIColor.lightGray
+        button.setTitle("Search for More", for: .normal)
+        button.setTitleColor(.black, for: .normal)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .light)
+        button.addTarget(self, action: #selector(searchForMore), for: .touchUpInside)
+        return button
+    }()
+
+    
+    @objc func searchForMore() {
+        let mainVC = MainViewController()
+        self.navigationController?.pushViewController(mainVC, animated: true)
+    }
+
+    
 }
 
 extension FavoriteViewController: UICollectionViewDataSource {
@@ -112,4 +144,9 @@ extension FavoriteViewController: UICollectionViewDataSource {
         cell.configure(with: movie, userRating: userRating)
         return cell
     }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        //TODO: user can select cells and goto the movies details page for selected movie
+    }
+    
 }

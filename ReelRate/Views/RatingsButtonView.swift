@@ -93,7 +93,7 @@ class RatingButtonsView: UIView {
         
         let resetButton = UILabel()
         resetButton.text = "click to reset"
-        resetButton.font = UIFont.systemFont(ofSize: 14, weight: .light)
+        resetButton.font = UIFont.systemFont(ofSize: 12, weight: .light)
         resetButton.textColor = .lightGray
         resetButton.textAlignment = .center
         resetButton.backgroundColor = .black
@@ -144,7 +144,7 @@ class RatingButtonsView: UIView {
    
         let subtitleLabelTop = UILabel()
         subtitleLabelTop.text = "Rate it myself >"
-        subtitleLabelTop.font = UIFont.systemFont(ofSize: 16, weight: .bold)
+        subtitleLabelTop.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         subtitleLabelTop.textColor = .white
         subtitleLabelTop.textAlignment = .center
         subtitleLabelTop.backgroundColor = .brown
@@ -153,7 +153,7 @@ class RatingButtonsView: UIView {
        
         let subtitleLabelBottom = UILabel()
         subtitleLabelBottom.text = "add personal rating"
-        subtitleLabelBottom.font = UIFont.systemFont(ofSize: 14, weight: .light)
+        subtitleLabelBottom.font = UIFont.systemFont(ofSize: 12, weight: .light)
         subtitleLabelBottom.textColor = .yellow
         subtitleLabelBottom.textAlignment = .center
         subtitleLabelBottom.backgroundColor = .black
@@ -194,7 +194,7 @@ class RatingButtonsView: UIView {
     private let currentRatingLabel: UILabel = {
         let label = UILabel()
         label.text = "You've not yet rated this"
-        label.font = UIFont.systemFont(ofSize: 9, weight: .bold)
+        label.font = UIFont.systemFont(ofSize: 11, weight: .light)
         label.textAlignment = .center
         label.backgroundColor = .white
         label.layer.cornerRadius = 8

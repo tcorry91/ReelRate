@@ -8,25 +8,36 @@
 import Foundation
 import UIKit
 
+
 extension UIViewController {
     
-    func addCustomBackButton() {
-        let backButton = CustomBackButton()
+    func addCustomBackButton(title: String, textColor: UIColor = .white) {
+        let backButton = CustomBackButton(title: title, textColor: textColor)
         backButton.translatesAutoresizingMaskIntoConstraints = false
-        backButton.addPopAction(to: self)
+        backButton.addAction(to: self, targetVC: MainViewController.self)
         backButton.layer.zPosition = 1
         view.addSubview(backButton)
         
         NSLayoutConstraint.activate([
-            backButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 25),
-            backButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 25),
-            backButton.heightAnchor.constraint(equalToConstant: 20),
-            backButton.widthAnchor.constraint(greaterThanOrEqualToConstant: 110)
+                        backButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30),
+                        backButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 30),
+                        backButton.heightAnchor.constraint(equalToConstant: 25),
+                        backButton.widthAnchor.constraint(greaterThanOrEqualToConstant: 135)
         ])
     }
     
-    @objc func handleBackButtonTapped() {
-        navigationController?.popViewController(animated: true)
+    @objc func handleBackToMainTapped() {
+    
+        if let navigationController = navigationController {
+            for viewController in navigationController.viewControllers {
+                if viewController is MainViewController {
+                    navigationController.popToViewController(viewController, animated: true)
+                    return
+                }
+            }
+        }
     }
 }
+
+
 

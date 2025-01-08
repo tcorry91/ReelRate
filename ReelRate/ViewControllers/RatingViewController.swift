@@ -14,7 +14,7 @@ class RatingViewController: UIViewController, RatingButtonsViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .baseGreen
-        addCustomBackButton()
+        addCustomBackButton(title: "<  Back to Search")
         setupPosterCornerMask()
         setupViews()
         ratingButtonsView.delegate = self
@@ -197,7 +197,7 @@ class RatingViewController: UIViewController, RatingButtonsViewDelegate {
         button.layer.cornerRadius = 25
         button.setTitle("Go to favourites", for: .normal)
         button.setTitleColor(.black, for: .normal)
-        button.titleLabel?.font = UIFont.systemFont(ofSize: 18, weight: .medium)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         button.layer.shadowColor = UIColor.black.cgColor
         button.layer.shadowOffset = CGSize(width: 0, height: 4)
         button.layer.shadowOpacity = 0.2

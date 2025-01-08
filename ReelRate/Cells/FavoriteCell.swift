@@ -19,15 +19,26 @@ class FavoriteCell: UICollectionViewCell {
     private let ratingLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = UIFont.systemFont(ofSize: 14, weight: .bold)
+        label.font = UIFont.systemFont(ofSize: 20, weight: .bold)
         label.textAlignment = .center
         label.numberOfLines = 2
+        return label
+    }()
+  
+    private let myRatingLabel: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = UIFont.systemFont(ofSize: 16, weight: .light)
+        label.textAlignment = .center
+        label.numberOfLines = 2
+        label.text = "My Rating"
         return label
     }()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupUI()
+        setupPosterCornerMask()
     }
     
     required init?(coder: NSCoder) {
@@ -36,6 +47,8 @@ class FavoriteCell: UICollectionViewCell {
     
     private func setupUI() {
         contentView.addSubview(imageView)
+        contentView.addSubview(favoriteButton)
+        contentView.addSubview(myRatingLabel)
         contentView.addSubview(ratingLabel)
         
         NSLayoutConstraint.activate([
@@ -44,12 +57,50 @@ class FavoriteCell: UICollectionViewCell {
             imageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             imageView.heightAnchor.constraint(equalTo: contentView.heightAnchor, multiplier: 0.67),
             
-            ratingLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 8),
+            favoriteButton.centerXAnchor.constraint(equalTo: imageView.centerXAnchor, constant: 0),
+            favoriteButton.centerYAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 0),
+            favoriteButton.heightAnchor.constraint(equalToConstant: 48),
+            favoriteButton.widthAnchor.constraint(equalToConstant: 48),
+            
+            myRatingLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 30),
+            myRatingLabel.centerXAnchor.constraint(equalTo: contentView.centerXAnchor, constant: 0),
+            
+            ratingLabel.topAnchor.constraint(equalTo: myRatingLabel.bottomAnchor, constant: 10),
             ratingLabel.centerXAnchor.constraint(equalTo: contentView.centerXAnchor)
         ])
+    }
 
+    private func setupPosterCornerMask() {
+        let cornerRadius: CGFloat = 40
+        
+        DispatchQueue.main.async {
+            let path = UIBezierPath(
+                roundedRect: self.imageView.bounds,
+                byRoundingCorners: [.topRight],
+                cornerRadii: CGSize(width: cornerRadius, height: cornerRadius)
+            )
+            
+            let mask = CAShapeLayer()
+            mask.path = path.cgPath
+            self.imageView.layer.mask = mask
+        }
     }
     
+    let favoriteButton: UIButton = {
+        let button = UIButton()
+        button.contentMode = .scaleAspectFill
+        button.clipsToBounds = true
+        button.layer.cornerRadius = 8
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.backgroundColor = UIColor.clear
+        button.setImage(UIImage(named: "FavouriteIconFilled"), for: .normal)
+        button.addTarget(self, action: #selector(favoriteButtonTapped), for: .touchUpInside)
+        return button
+    }()
+    
+    @objc func favoriteButtonTapped() {
+        //TODO: User can tap this and remove the item from favourites list
+    }
 
     
     func configure(with movie: Movie, userRating: Int?) {
@@ -76,7 +127,7 @@ class FavoriteCell: UICollectionViewCell {
             print("No poster path, using placeholder for \(movie.title ?? "Unknown")")
         }
         
-        ratingLabel.text = userRating != nil ? "\(userRating!)/10" : "No Rating"
+        ratingLabel.text = userRating != nil ? "\(userRating!)" : "0"
     }
 
 

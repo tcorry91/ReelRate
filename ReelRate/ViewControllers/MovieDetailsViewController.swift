@@ -13,16 +13,16 @@ class MovieDetailsViewController: UIViewController, RatingButtonsViewDelegate {
     var viewModel: MovieDetailViewModel!
     private var cancellables = Set<AnyCancellable>()
     let ratingButtonsView = RatingButtonsView()
-    private lazy var tinyTitleLabel = createLabel(fontSize: 24, weight: .bold)
-    private lazy var yearLabel = createLabel(fontSize: 15, weight: .light, textColor: .lightGray)
-    private lazy var genreLabel = createLabel(fontSize: 14, weight: .medium, textColor: .systemGray)
+    private lazy var tinyTitleLabel = createLabel(fontSize: 16, weight: .bold)
+    private lazy var yearLabel = createLabel(fontSize: 12, weight: .light, textColor: .lightGray)
+    private lazy var genreLabel = createLabel(fontSize: 12, weight: .medium, textColor: .systemGray)
     
     private let ratingLabel = UILabel()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
-        addCustomBackButton()
+        addCustomBackButton(title: "<  Back to Search")
         setupViews()
         setupPosterCornerMask()
         configureUI()
@@ -59,14 +59,14 @@ class MovieDetailsViewController: UIViewController, RatingButtonsViewDelegate {
     
     func setupViews() {
         view.addSubview(backDropImageView)
-        backDropImageView.topAnchor.constraint(equalTo: view.topAnchor, constant: -7).isActive = true
+        backDropImageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
         backDropImageView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 0).isActive = true
         backDropImageView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: 0).isActive = true
         backDropImageView.heightAnchor.constraint(equalToConstant: 240).isActive = true
         
         view.addSubview(titleLabel)
-        titleLabel.centerYAnchor.constraint(equalTo: backDropImageView.centerYAnchor, constant: 0).isActive = true
-        titleLabel.leftAnchor.constraint(equalTo: backDropImageView.leftAnchor, constant: 28).isActive = true
+        titleLabel.topAnchor.constraint(equalTo: backDropImageView.topAnchor, constant: 75).isActive = true
+        titleLabel.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 30).isActive = true
         
         view.addSubview(posterImageView)
         posterImageView.topAnchor.constraint(equalTo: backDropImageView.bottomAnchor, constant: -40).isActive = true
@@ -89,7 +89,7 @@ class MovieDetailsViewController: UIViewController, RatingButtonsViewDelegate {
         view.addSubview(ratingButtonsView)
         ratingButtonsView.translatesAutoresizingMaskIntoConstraints = false
         ratingButtonsView.topAnchor.constraint(equalTo: posterImageView.bottomAnchor, constant: 35).isActive = true
-        ratingButtonsView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 37).isActive = true
+        ratingButtonsView.leftAnchor.constraint(equalTo: posterImageView.leftAnchor, constant: 5).isActive = true
         ratingButtonsView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -48).isActive = true
         ratingButtonsView.heightAnchor.constraint(equalToConstant: 60).isActive = true
         
@@ -133,16 +133,17 @@ class MovieDetailsViewController: UIViewController, RatingButtonsViewDelegate {
     
     private let titleLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 28, weight: .bold)
+        label.font = UIFont.systemFont(ofSize: 48, weight: .bold)
         label.textColor = .white
         label.translatesAutoresizingMaskIntoConstraints = false
+        label.numberOfLines = 0
         return label
     }()
     
     private let overviewHeaderLabel: UILabel = {
         let label = UILabel()
         label.text = "Overview"
-        label.font = UIFont.systemFont(ofSize: 20, weight: .bold)
+        label.font = UIFont.systemFont(ofSize: 16, weight: .bold)
         label.textColor = .black
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
