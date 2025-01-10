@@ -178,7 +178,6 @@ class MainViewController: UIViewController, UICollectionViewDataSource, UICollec
         return cell
     }
     
-    
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let selectedMovie = popularMovies[indexPath.item]
         let detailViewModel = MovieDetailViewModel(movie: selectedMovie)

@@ -22,7 +22,7 @@ class MovieDetailsViewController: UIViewController, RatingButtonsViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
-        addCustomBackButton(title: "<  Back to Search")
+        addCustomBackButton(title: "  Back to Search")
         setupViews()
         setupPosterCornerMask()
         configureUI()

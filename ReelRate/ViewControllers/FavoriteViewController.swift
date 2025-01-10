@@ -39,7 +39,7 @@ class FavoriteViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        addCustomBackButton(title: "<  Back", textColor: UIColor.black)
+        addCustomBackButton(title: "Back", textColor: UIColor.black, chevronColor: .brown, width: 88)
         setupUI()
         bindViewModel()
         viewModel.fetchFavorites()
@@ -115,7 +115,7 @@ class FavoriteViewController: UIViewController {
         button.clipsToBounds = true
         button.layer.cornerRadius = 28
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.backgroundColor = UIColor.lightGray
+        button.backgroundColor = UIColor.grey237
         button.setTitle("Search for More", for: .normal)
         button.setTitleColor(.black, for: .normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .light)
@@ -128,8 +128,6 @@ class FavoriteViewController: UIViewController {
         let mainVC = MainViewController()
         self.navigationController?.pushViewController(mainVC, animated: true)
     }
-
-    
 }
 
 extension FavoriteViewController: UICollectionViewDataSource {

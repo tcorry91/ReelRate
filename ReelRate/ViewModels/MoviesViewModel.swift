@@ -191,13 +191,3 @@ extension MoviesViewModel {
           return String(releaseDate.prefix(4))
       }
 }
-
-
-
-
-extension MoviesViewModel {
-//    func genreNames(for result: SearchResult) -> [String] {
-//        guard let genreIDs = result.genreIds else { return [] }
-//        return genreIDs.compactMap { APIManager.shared.genres[$0] }
-//    }
-}

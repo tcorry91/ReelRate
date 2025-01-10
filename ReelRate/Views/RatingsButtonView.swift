@@ -6,6 +6,8 @@
 //
 
 import UIKit
+import Combine
+
 protocol RatingButtonsViewDelegate: AnyObject {
     func didTapRateButton()
     func didTapCurrentRating()
@@ -14,7 +16,7 @@ protocol RatingButtonsViewDelegate: AnyObject {
 }
 
 class RatingButtonsView: UIView {
-    
+    private var cancellables: Set<AnyCancellable> = []
     override init(frame: CGRect) {
         super.init(frame: frame)
         configureForMode()
@@ -38,8 +40,13 @@ class RatingButtonsView: UIView {
     
     var rating: Int = 0 {
         didSet {
-            currentRatingLabel.text = "You've rated this \(rating)"
+            currentRatingButton.setTitle("You’ve rated this \(rating)", for: .normal)
         }
+    }
+    
+    
+    func refresh(with rating: Int) {
+        self.rating = rating
     }
     
     weak var delegate: RatingButtonsViewDelegate?
@@ -74,22 +81,25 @@ class RatingButtonsView: UIView {
             favButton.heightAnchor.constraint(equalToConstant: 55)
         ])
     }
+    
+    private var currentRatingButton: UIButton = {
+          let button = UIButton(type: .system)
+          button.setTitle("You’ve not yet rated this", for: .normal)
+          button.titleLabel?.font = UIFont.systemFont(ofSize: 9, weight: .bold)
+          button.setTitleColor(.white, for: .normal)
+          button.backgroundColor = .green
+          button.translatesAutoresizingMaskIntoConstraints = false
+          button.addTarget(self, action: #selector(currentRatingTapped), for: .touchUpInside)
+          return button
+      }()
 
     private func setupCurrentRatingView() {
-        print("setting up ratings VC for the ratings page")
+        print("setup rating view for the ratings page XD")
         
         let ratingContainerView = UIView()
         ratingContainerView.layer.cornerRadius = 12
         ratingContainerView.clipsToBounds = true
         ratingContainerView.translatesAutoresizingMaskIntoConstraints = false
-        
-        let currentRatingButton = UIButton(type: .system)
-        currentRatingButton.setTitle("You’ve not yet rated this", for: .normal)
-        currentRatingButton.titleLabel?.font = UIFont.systemFont(ofSize: 9, weight: .bold)
-        currentRatingButton.setTitleColor(.white, for: .normal)
-        currentRatingButton.backgroundColor = .green
-        currentRatingButton.translatesAutoresizingMaskIntoConstraints = false
-        currentRatingButton.addTarget(self, action: #selector(currentRatingTapped), for: .touchUpInside)
         
         let resetButton = UILabel()
         resetButton.text = "click to reset"
@@ -98,6 +108,11 @@ class RatingButtonsView: UIView {
         resetButton.textAlignment = .center
         resetButton.backgroundColor = .black
         resetButton.translatesAutoresizingMaskIntoConstraints = false
+        resetButton.isUserInteractionEnabled = true
+
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(resetButtonTapped))
+        resetButton.addGestureRecognizer(tapGesture)
+        
         
         ratingContainerView.addSubview(currentRatingButton)
         ratingContainerView.addSubview(resetButton)
@@ -188,12 +203,9 @@ class RatingButtonsView: UIView {
         return containerView
     }()
 
-
-
     
     private let currentRatingLabel: UILabel = {
         let label = UILabel()
-        label.text = "You've not yet rated this"
         label.font = UIFont.systemFont(ofSize: 11, weight: .light)
         label.textAlignment = .center
         label.backgroundColor = .white
@@ -239,12 +251,10 @@ class RatingButtonsView: UIView {
         return button
     }()
     
-    
     @objc func favButtonTapped() {
         print("fav button tapped in ratings button view")
         delegate?.didTapFavourites()
     }
-    
     
 }
 

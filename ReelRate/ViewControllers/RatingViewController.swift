@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Combine
 
 class RatingViewController: UIViewController, RatingButtonsViewDelegate {
     
@@ -14,7 +15,7 @@ class RatingViewController: UIViewController, RatingButtonsViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .baseGreen
-        addCustomBackButton(title: "<  Back to Search")
+        addCustomBackButton(title: "  Back to Search")
         setupPosterCornerMask()
         setupViews()
         ratingButtonsView.delegate = self
@@ -24,6 +25,13 @@ class RatingViewController: UIViewController, RatingButtonsViewDelegate {
         let favoriteImage = viewModel.isFavorited ? "FavouriteIconFilled" : "FavoriteIcon"
         favoriteButton.setImage(UIImage(named: favoriteImage), for: .normal)
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        ratingButtonsView.refresh(with: viewModel.userRating ?? 0)
+    }
+
+    
     
     func configUI() {
         if let backdropURL = viewModel.backdropURL {
@@ -63,8 +71,9 @@ class RatingViewController: UIViewController, RatingButtonsViewDelegate {
         
         let selectAction = UIAlertAction(title: "Select", style: .default) { [weak self] _ in
             let selectedRow = picker.selectedRow(inComponent: 0)
-            self?.updateRating(selectedRow + 1) // Assuming 1-based ratings
+            self?.updateRating(selectedRow + 1)
             print("Selected row in picker:", selectedRow)
+            self?.refreshView()
         }
         
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
@@ -74,6 +83,12 @@ class RatingViewController: UIViewController, RatingButtonsViewDelegate {
         
         present(alert, animated: true)
     }
+    
+    private func refreshView() {
+        ratingButtonsView.refresh(with: viewModel.userRating ?? 0)
+    }
+
+    
     func setupViews() {
         view.addSubview(backDropImageView)
         view.addSubview(titleLabel)
@@ -165,7 +180,6 @@ class RatingViewController: UIViewController, RatingButtonsViewDelegate {
         label.font = UIFont.systemFont(ofSize: 28, weight: .bold)
         label.textColor = .white
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Paw Patrol"
         return label
     }()
  
@@ -203,17 +217,14 @@ class RatingViewController: UIViewController, RatingButtonsViewDelegate {
         button.layer.shadowOpacity = 0.2
         button.layer.shadowRadius = 4
         button.addTarget(self, action: #selector(gotoFavouritesTapped), for: .touchUpInside)
-        
         return button
     }()
-    
     
     @objc func gotoFavouritesTapped() {
         let favoritesViewModel = FavoritesViewModel()
         let favoritesVC = FavoriteViewController(viewModel: favoritesViewModel)
         navigationController?.pushViewController(favoritesVC, animated: true)
     }
-    
     
     @objc private func favoriteButtonTapped() {
         guard let viewModel = viewModel else {
@@ -222,25 +233,24 @@ class RatingViewController: UIViewController, RatingButtonsViewDelegate {
         }
         
         print("Favorite button tapped in the Rating VC!")
-        
         viewModel.toggleFavorite()
-        
         let favoriteImage = viewModel.isFavorited ? "FavouriteIconFilled" : "FavouriteIcon"
         favoriteButton.setImage(UIImage(named: favoriteImage), for: .normal)
     }
     
-    
-    
     func didTapRateButton() {
         print("rate tapped")
     }
+
     
     private func updateRating(_ rating: Int) {
         print("Selected rating in RatingVC: \(rating)")
         viewModel.updateRating(to: rating)
-        ratingButtonsView.rating = rating
+        DispatchQueue.main.async {
+            self.ratingButtonsView.refresh(with: rating) 
+        }
     }
-    
+
     
     func didTapeResetButton() {
         print("reset button tapped")
@@ -248,9 +258,8 @@ class RatingViewController: UIViewController, RatingButtonsViewDelegate {
     }
     
     func didTapFavourites() {
-        print("did tap faovurites in rating vc?")
-        
     }
+    
 }
 
 
