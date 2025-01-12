@@ -15,6 +15,14 @@ protocol RatingButtonsViewDelegate: AnyObject {
     func didTapFavourites()
 }
 
+extension RatingButtonsViewDelegate {
+    func didTapRateButton() {}
+    func didTapCurrentRating() {}
+    func didTapeResetButton() {}
+    func didTapFavourites() {}
+}
+
+
 class RatingButtonsView: UIView {
     private var cancellables: Set<AnyCancellable> = []
     override init(frame: CGRect) {
@@ -44,7 +52,6 @@ class RatingButtonsView: UIView {
         }
     }
     
-    
     func refresh(with rating: Int) {
         self.rating = rating
     }
@@ -63,7 +70,6 @@ class RatingButtonsView: UIView {
     }
 
     private func setupRatingAndFavoritesView() {
-        print("setup ratings + fav")
         let stackView = UIStackView(arrangedSubviews: [rateButtonView, favButton])
         stackView.axis = .horizontal
         stackView.spacing = 16
@@ -85,17 +91,15 @@ class RatingButtonsView: UIView {
     private var currentRatingButton: UIButton = {
           let button = UIButton(type: .system)
           button.setTitle("You’ve not yet rated this", for: .normal)
-          button.titleLabel?.font = UIFont.systemFont(ofSize: 9, weight: .bold)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 11, weight: .light)
           button.setTitleColor(.white, for: .normal)
-          button.backgroundColor = .green
+          button.backgroundColor = .darkGreenBanner
           button.translatesAutoresizingMaskIntoConstraints = false
           button.addTarget(self, action: #selector(currentRatingTapped), for: .touchUpInside)
           return button
       }()
 
     private func setupCurrentRatingView() {
-        print("setup rating view for the ratings page XD")
-        
         let ratingContainerView = UIView()
         ratingContainerView.layer.cornerRadius = 12
         ratingContainerView.clipsToBounds = true
@@ -104,7 +108,7 @@ class RatingButtonsView: UIView {
         let resetButton = UILabel()
         resetButton.text = "click to reset"
         resetButton.font = UIFont.systemFont(ofSize: 12, weight: .light)
-        resetButton.textColor = .lightGray
+        resetButton.textColor = .darkGreenBanner
         resetButton.textAlignment = .center
         resetButton.backgroundColor = .black
         resetButton.translatesAutoresizingMaskIntoConstraints = false
@@ -252,10 +256,7 @@ class RatingButtonsView: UIView {
     }()
     
     @objc func favButtonTapped() {
-        print("fav button tapped in ratings button view")
         delegate?.didTapFavourites()
     }
     
 }
-
-

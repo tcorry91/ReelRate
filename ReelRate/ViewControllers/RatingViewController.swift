@@ -20,7 +20,6 @@ class RatingViewController: UIViewController, RatingButtonsViewDelegate {
         setupViews()
         ratingButtonsView.delegate = self
         configUI()
-        print("Selected movie title within rating vc:", viewModel.title)
         ratingButtonsView.mode = .currentRating
         let favoriteImage = viewModel.isFavorited ? "FavouriteIconFilled" : "FavoriteIcon"
         favoriteButton.setImage(UIImage(named: favoriteImage), for: .normal)
@@ -30,8 +29,6 @@ class RatingViewController: UIViewController, RatingButtonsViewDelegate {
         super.viewWillAppear(animated)
         ratingButtonsView.refresh(with: viewModel.userRating ?? 0)
     }
-
-    
     
     func configUI() {
         if let backdropURL = viewModel.backdropURL {
@@ -57,6 +54,7 @@ class RatingViewController: UIViewController, RatingButtonsViewDelegate {
     }
     
     func didTapCurrentRating() {
+        print("checking this didTapCurrentRating is running ")
         presentPicker()
     }
     
@@ -126,7 +124,7 @@ class RatingViewController: UIViewController, RatingButtonsViewDelegate {
             ratingButtonsView.heightAnchor.constraint(equalToConstant: 60),
             
             gotoFavouritesButton.topAnchor.constraint(equalTo: ratingButtonsView.bottomAnchor, constant: 20),
-            gotoFavouritesButton.heightAnchor.constraint(equalToConstant: 50),
+            gotoFavouritesButton.heightAnchor.constraint(equalToConstant: 56),
             gotoFavouritesButton.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 50),
             gotoFavouritesButton.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -50),
         ])
@@ -134,7 +132,7 @@ class RatingViewController: UIViewController, RatingButtonsViewDelegate {
     
     private let backDropImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.contentMode = .scaleAspectFit
+        imageView.contentMode = .scaleToFill
         imageView.clipsToBounds = true
         imageView.layer.cornerRadius = 0
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -237,14 +235,8 @@ class RatingViewController: UIViewController, RatingButtonsViewDelegate {
         let favoriteImage = viewModel.isFavorited ? "FavouriteIconFilled" : "FavouriteIcon"
         favoriteButton.setImage(UIImage(named: favoriteImage), for: .normal)
     }
-    
-    func didTapRateButton() {
-        print("rate tapped")
-    }
 
-    
     private func updateRating(_ rating: Int) {
-        print("Selected rating in RatingVC: \(rating)")
         viewModel.updateRating(to: rating)
         DispatchQueue.main.async {
             self.ratingButtonsView.refresh(with: rating) 
@@ -253,12 +245,9 @@ class RatingViewController: UIViewController, RatingButtonsViewDelegate {
 
     
     func didTapeResetButton() {
-        print("reset button tapped")
         ratingButtonsView.rating = 0
     }
     
-    func didTapFavourites() {
-    }
     
 }
 

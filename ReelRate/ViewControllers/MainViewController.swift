@@ -8,13 +8,13 @@
 import UIKit
 import Combine
 
-//TODO: make this a tableview NOT a collectionview
-class MainViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+class MainViewController: UIViewController, UITableViewDelegate {
     
     private var popularMovies: [Movie] {
         return viewModel.popularMovies
     }
     
+    private var tableView: UITableView!
     private let topSectionView = TopSectionView()
     private var cancellables = Set<AnyCancellable>()
     private var searchResults: [SearchResult] = []
@@ -32,17 +32,6 @@ class MainViewController: UIViewController, UICollectionViewDataSource, UICollec
         return label
     }()
     
-    private let collectionView: UICollectionView = {
-        let layout = UICollectionViewFlowLayout()
-        layout.scrollDirection = .vertical
-        layout.minimumLineSpacing = 10
-        layout.minimumInteritemSpacing = 10
-        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        collectionView.backgroundColor = .white
-        collectionView.translatesAutoresizingMaskIntoConstraints = false
-        return collectionView
-    }()
-    
     @objc func gotoFavouritesTapped() {
         let favoritesViewModel = FavoritesViewModel()
         let favoritesVC = FavoriteViewController(viewModel: favoritesViewModel)
@@ -52,11 +41,15 @@ class MainViewController: UIViewController, UICollectionViewDataSource, UICollec
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
+        tableView = UITableView()
+           tableView.translatesAutoresizingMaskIntoConstraints = false
+           tableView.register(MovieCell.self, forCellReuseIdentifier: MovieCell.reuseIdentifier)
+           tableView.delegate = self
+           tableView.dataSource = self
+           tableView.separatorStyle = .none
+           tableView.backgroundColor = .clear
+           view.addSubview(tableView)
         view.addSubview(topSectionView)
-        view.addSubview(collectionView)
-        collectionView.dataSource = self
-        collectionView.delegate = self
-        collectionView.register(MovieCell.self, forCellWithReuseIdentifier: MovieCell.reuseIdentifier)
         setupConstraints()
         topSectionView.searchTextPublisher
             .debounce(for: .milliseconds(300), scheduler: RunLoop.main)
@@ -89,9 +82,9 @@ class MainViewController: UIViewController, UICollectionViewDataSource, UICollec
         viewModel.fetchPopularMovies()
         
         viewModel.$popularMovies
+            .receive(on: RunLoop.main)
             .sink { [weak self] movies in
-                print("Popular movies count:", movies.count)
-                self?.collectionView.reloadData()
+                self?.tableView.reloadData()
             }
             .store(in: &cancellables)
         fetchGenre()
@@ -103,7 +96,6 @@ class MainViewController: UIViewController, UICollectionViewDataSource, UICollec
     }
 
     func fetchGenre() {
-        print("fetching genre")
         APIManager.shared.fetchGenres { result in
             switch result {
             case .success(let genres):
@@ -117,18 +109,16 @@ class MainViewController: UIViewController, UICollectionViewDataSource, UICollec
     private func performSearch(with query: String) {
         if query.isEmpty {
             searchResults = []
-            collectionView.reloadData()
+            tableView.reloadData()
         } else {
             viewModel.search(query: query)
         }
     }
     
-
     private func updateUI(with results: [SearchResult]) {
         self.searchResults = results
-        self.collectionView.reloadData()
+        self.tableView.reloadData()
     }
-    
     
     private func setupConstraints() {
         topSectionView.translatesAutoresizingMaskIntoConstraints = false
@@ -138,60 +128,92 @@ class MainViewController: UIViewController, UICollectionViewDataSource, UICollec
             topSectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             topSectionView.heightAnchor.constraint(equalToConstant: 211),
             
-            collectionView.topAnchor.constraint(equalTo: topSectionView.bottomAnchor, constant: 0),
-            collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            
+            tableView.topAnchor.constraint(equalTo: topSectionView.bottomAnchor, constant: 0),
+                        tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+                        tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+                        tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
     }
     
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+
+  
+}
+
+extension MainViewController: UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return searchResults.isEmpty ? popularMovies.count : searchResults.count
     }
     
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MovieCell.reuseIdentifier, for: indexPath) as! MovieCell
-
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: MovieCell.reuseIdentifier, for: indexPath) as! MovieCell
         
         if searchResults.isEmpty {
-               let movie = popularMovies[indexPath.item]
-               let genres = viewModel.genreNames(for: movie)
-               cell.configure(
-                   with: movie.title ?? "No title",
-                   imageURL: viewModel.posterURL(for: movie),
-                   date: viewModel.year(for: movie),
-                   genres: genres
-               )
-           } else {
-               let result = searchResults[indexPath.item]
-               let genres = viewModel.genreNames(for: result)
-               let formattedDate = viewModel.year(for: result)
-               cell.configure(
-                   with: result.title ?? result.name ?? "No title",
-                   imageURL: viewModel.posterURL(for: result),
-                   date: formattedDate,
-                   genres: genres
-                 
-               )
-           }
-        
+            let movie = popularMovies[indexPath.row]
+            let genres = viewModel.genreNames(for: movie)
+            cell.configure(
+                with: movie.title ?? "No title",
+                imageURL: viewModel.posterURL(for: movie),
+                date: viewModel.year(for: movie),
+                genres: genres
+            )
+        } else {
+            let result = searchResults[indexPath.row]
+            let genres = viewModel.genreNames(for: result)
+            let formattedDate = viewModel.year(for: result)
+            cell.configure(
+                with: result.title ?? result.name ?? "No title",
+                imageURL: viewModel.posterURL(for: result),
+                date: formattedDate,
+                genres: genres
+            )
+        }
         return cell
     }
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 150
+    }
     
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let selectedMovie = popularMovies[indexPath.item]
-        let detailViewModel = MovieDetailViewModel(movie: selectedMovie)
-        let detailVC = MovieDetailsViewController()
-        detailVC.viewModel = detailViewModel
-        navigationController?.pushViewController(detailVC, animated: true)
-    }
-
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: view.frame.width - 32, height: 150)
-    }
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+           let selectedMovie: Movie
+           
+           if searchResults.isEmpty {
+               selectedMovie = popularMovies[indexPath.row]
+           } else {
+               let searchResult = searchResults[indexPath.row]
+             
+               selectedMovie = Movie(
+                   adult: false,
+                   backdropPath: searchResult.backdropPath,
+                   genreIds: searchResult.genreIds,
+                   id: searchResult.id,
+                   originalLanguage: nil,
+                   originalTitle: nil,
+                   overview: searchResult.overview,
+                   popularity: searchResult.popularity,
+                   posterPath: searchResult.posterPath,
+                   releaseDate: searchResult.releaseDate,
+                   title: searchResult.title ?? searchResult.name,
+                   video: false,
+                   voteAverage: searchResult.voteAverage,
+                   voteCount: searchResult.voteCount
+               )
+           }
+           
+           let detailViewModel = MovieDetailViewModel(movie: selectedMovie)
+           let detailVC = MovieDetailsViewController()
+           detailVC.viewModel = detailViewModel
+           navigationController?.pushViewController(detailVC, animated: true)
+       }
+    
 }
 
 class ImageCache {
     static let shared = NSCache<NSString, UIImage>()
 }
 
+//TODO: double check image cache code (above)
+//TODO: readme
+//TODO: testing
+//TODO: reusable labels
+//TODO: custom fonts

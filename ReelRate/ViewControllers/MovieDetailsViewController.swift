@@ -206,10 +206,6 @@ class MovieDetailsViewController: UIViewController, RatingButtonsViewDelegate {
         }
     }
     
-    internal func didTapeResetButton() {
-        print("reset button tappeded")
-    }
-    
     private let posterImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
@@ -284,9 +280,5 @@ class MovieDetailsViewController: UIViewController, RatingButtonsViewDelegate {
         let favoritesViewModel = FavoritesViewModel()
         let favoritesVC = FavoriteViewController(viewModel: favoritesViewModel)
         navigationController?.pushViewController(favoritesVC, animated: true)
-    }
-    
-    func didTapCurrentRating() {
-        print("movie details vc didTap current rating make this optional?!")
     }
 }

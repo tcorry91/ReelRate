@@ -23,8 +23,6 @@ class FavoritesViewModel {
       }
     
     func getRating(for movieID: Int) -> Int? {
-        print("Retrieved rating in fav view model", sessionDataManager.getRating(for: movieID))
             return sessionDataManager.getRating(for: movieID)
         }
-    
 }
