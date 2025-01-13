@@ -10,7 +10,7 @@ import Combine
 
 class MoviesViewModel {
     @Published var genres: [Int: String] = [:]
-    
+    @Published var isSearching: Bool = false
     @Published var popularMovies: [Movie] = []
     @Published var searchResults: [SearchResult] = []
     private(set) var movies: [Movie] = [] {

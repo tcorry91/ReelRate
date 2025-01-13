@@ -9,10 +9,17 @@ import UIKit
 import Combine
 
 class TopSectionView: UIView {
+    
+    var isSearching: Bool = false {
+           didSet {
+               titleLabel.text = isSearching ? "Your Results" : "Popular Right Now"
+           }
+       }
+    
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.text = "Popular Right Now"
-        label.font = UIFont.systemFont(ofSize: 32, weight: .heavy)
+        label.font = UIFont(name: "Jomhuria-Regular", size: 60)
         label.textColor = .titleGreen
         label.textAlignment = .left
         label.translatesAutoresizingMaskIntoConstraints = false

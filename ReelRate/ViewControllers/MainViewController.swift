@@ -21,17 +21,6 @@ class MainViewController: UIViewController, UITableViewDelegate {
     private let viewModel = MoviesViewModel()
     private var movies: [Movie] = []
     
-    let titleLabel: UILabel = {
-        let label = UILabel()
-        label.text = "Popular Right Now"
-        label.font = UIFont.systemFont(ofSize: 24, weight: .bold)
-        label.textColor = .black
-        label.textAlignment = .center
-        label.numberOfLines = 1
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
-    
     @objc func gotoFavouritesTapped() {
         let favoritesViewModel = FavoritesViewModel()
         let favoritesVC = FavoriteViewController(viewModel: favoritesViewModel)
@@ -89,12 +78,12 @@ class MainViewController: UIViewController, UITableViewDelegate {
             .store(in: &cancellables)
         fetchGenre()
         
-        for family in UIFont.familyNames {
-            print("Font family: \(family)")
-            for fontName in UIFont.fontNames(forFamilyName: family) {
-                print("    Font name: \(fontName)")
+        viewModel.$isSearching
+            .receive(on: RunLoop.main)
+            .sink { [weak self] isSearching in
+                self?.topSectionView.isSearching = isSearching
             }
-        }
+            .store(in: &cancellables)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -117,7 +106,9 @@ class MainViewController: UIViewController, UITableViewDelegate {
         if query.isEmpty {
             searchResults = []
             tableView.reloadData()
+            viewModel.isSearching = false
         } else {
+            viewModel.isSearching = true
             viewModel.search(query: query)
         }
     }
@@ -165,6 +156,7 @@ extension MainViewController: UITableViewDataSource {
                 genres: genres
             )
         } else {
+            
             let result = searchResults[indexPath.row]
             let genres = viewModel.genreNames(for: result)
             let formattedDate = viewModel.year(for: result)
@@ -219,8 +211,10 @@ class ImageCache {
     static let shared = NSCache<NSString, UIImage>()
 }
 
+//TODO: Add "your results" when searching
+//TODO: update proper sizes with the custom fonts
+//TODO: implement custom fonts
 //TODO: double check image cache code (above)
 //TODO: readme
 //TODO: testing
 //TODO: reusable labels
-//TODO: custom fonts
