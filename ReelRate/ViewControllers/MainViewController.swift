@@ -207,14 +207,9 @@ extension MainViewController: UITableViewDataSource {
     
 }
 
-class ImageCache {
-    static let shared = NSCache<NSString, UIImage>()
-}
 
-//TODO: Add "your results" when searching
 //TODO: update proper sizes with the custom fonts
 //TODO: implement custom fonts
-//TODO: double check image cache code (above)
 //TODO: readme
 //TODO: testing
 //TODO: reusable labels
