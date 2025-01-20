@@ -208,8 +208,5 @@ extension MainViewController: UITableViewDataSource {
 }
 
 
-//TODO: update proper sizes with the custom fonts
-//TODO: implement custom fonts
-//TODO: readme
 //TODO: testing
 //TODO: reusable labels

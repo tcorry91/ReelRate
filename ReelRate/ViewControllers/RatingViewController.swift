@@ -102,8 +102,9 @@ class RatingViewController: UIViewController, RatingButtonsViewDelegate {
             backDropImageView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             backDropImageView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             
-            titleLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 100),
+            titleLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 130),
             titleLabel.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 28),
+            titleLabel.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -10),
             
             youRatedLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 20),
             youRatedLabel.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 28),
@@ -175,9 +176,9 @@ class RatingViewController: UIViewController, RatingButtonsViewDelegate {
     
     private let titleLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 28, weight: .bold)
         label.textColor = .white
         label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = UIFont(name: "Inter-Bold", size: 33)
         return label
     }()
  
@@ -209,7 +210,7 @@ class RatingViewController: UIViewController, RatingButtonsViewDelegate {
         button.layer.cornerRadius = 25
         button.setTitle("Go to favourites", for: .normal)
         button.setTitleColor(.black, for: .normal)
-        button.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
+        button.titleLabel?.font = UIFont(name: "Inter", size: 16)
         button.layer.shadowColor = UIColor.black.cgColor
         button.layer.shadowOffset = CGSize(width: 0, height: 4)
         button.layer.shadowOpacity = 0.2

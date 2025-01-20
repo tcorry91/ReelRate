@@ -6,6 +6,7 @@
 	<array>
 		<string>Jomhuria.ttf</string>
 		<string>Inter.ttf</string>
+		 <string>Inter-Bold.ttf</string>
 	</array>
 	<key>UIApplicationSceneManifest</key>
 	<dict>

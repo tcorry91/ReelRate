@@ -19,7 +19,7 @@ class TopSectionView: UIView {
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.text = "Popular Right Now"
-        label.font = UIFont(name: "Jomhuria-Regular", size: 60)
+        label.font = UIFont(name: "Jomhuria", size: 60)
         label.textColor = .titleGreen
         label.textAlignment = .left
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -28,19 +28,22 @@ class TopSectionView: UIView {
 
     private let searchField: UITextField = {
         let textField = UITextField()
+        let placeholderText = "Search"
         textField.attributedPlaceholder = NSAttributedString(
-            string: "Search",
-            attributes: [NSAttributedString.Key.foregroundColor: UIColor.black]
+            string: placeholderText,
+            attributes: [
+                NSAttributedString.Key.foregroundColor: UIColor.black,
+                NSAttributedString.Key.font: UIFont(name: "Inter-Bold", size: 16) ?? UIFont.systemFont(ofSize: 16)
+            ]
         )
         textField.backgroundColor = UIColor(white: 1.0, alpha: 0.9)
         textField.layer.cornerRadius = 21
-        textField.font = UIFont.systemFont(ofSize: 16)
+        textField.font = UIFont(name: "Inter-Bold", size: 16)
         textField.translatesAutoresizingMaskIntoConstraints = false
         textField.textAlignment = .left
-        textField.setLeftPadding(20) 
+        textField.setLeftPadding(20)
         return textField
     }()
-
     
     override init(frame: CGRect) {
         super.init(frame: frame)

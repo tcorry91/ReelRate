@@ -94,10 +94,9 @@ class FavoriteViewController: UIViewController {
     let titleLabel: UILabel = {
         let label = UILabel()
         label.text = "My Favourites"
-        label.font = UIFont.systemFont(ofSize: 48, weight: .bold)
-        label.textColor = .black
+        label.font = UIFont(name: "Jomhuria", size: 80)
+        label.textColor = .titleGreen
         label.textAlignment = .center
-        label.numberOfLines = 1
         label.translatesAutoresizingMaskIntoConstraints = false
         label.numberOfLines = 0
         return label

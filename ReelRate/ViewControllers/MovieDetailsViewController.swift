@@ -67,6 +67,7 @@ class MovieDetailsViewController: UIViewController, RatingButtonsViewDelegate {
         view.addSubview(titleLabel)
         titleLabel.topAnchor.constraint(equalTo: backDropImageView.topAnchor, constant: 75).isActive = true
         titleLabel.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 30).isActive = true
+        titleLabel.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -10).isActive = true
         
         view.addSubview(posterImageView)
         posterImageView.topAnchor.constraint(equalTo: backDropImageView.bottomAnchor, constant: -40).isActive = true
@@ -84,7 +85,7 @@ class MovieDetailsViewController: UIViewController, RatingButtonsViewDelegate {
         view.addSubview(mainStackView)
         mainStackView.topAnchor.constraint(equalTo: backDropImageView.bottomAnchor, constant: 0).isActive = true
         mainStackView.leftAnchor.constraint(equalTo: posterImageView.rightAnchor, constant: 5).isActive = true
-        
+        mainStackView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -10).isActive = true
         
         view.addSubview(ratingButtonsView)
         ratingButtonsView.translatesAutoresizingMaskIntoConstraints = false
@@ -133,12 +134,13 @@ class MovieDetailsViewController: UIViewController, RatingButtonsViewDelegate {
     
     private let titleLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 48, weight: .bold)
+        label.font = UIFont(name: "Inter-Bold", size: 30)
         label.textColor = .white
         label.translatesAutoresizingMaskIntoConstraints = false
         label.numberOfLines = 0
         return label
     }()
+
     
     private let overviewHeaderLabel: UILabel = {
         let label = UILabel()
@@ -151,12 +153,24 @@ class MovieDetailsViewController: UIViewController, RatingButtonsViewDelegate {
     
     private let overviewTextLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 16, weight: .regular)
-        label.textColor = .black
+        let font = UIFont(name: "Inter", size: 16)
+        let paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.lineHeightMultiple = 1.5
+        let fallbackText = "Description unavailable. Please try again later."
+        let attributedText = NSAttributedString(
+            string: fallbackText,
+            attributes: [
+                .font: font,
+                .foregroundColor: UIColor.black,
+                .paragraphStyle: paragraphStyle
+            ]
+        )
+        label.attributedText = attributedText
         label.numberOfLines = 0
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
+
     
     private lazy var overviewStackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [overviewHeaderLabel, overviewTextLabel])

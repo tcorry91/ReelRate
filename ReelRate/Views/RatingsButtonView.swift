@@ -173,7 +173,7 @@ class RatingButtonsView: UIView {
         let subtitleLabelBottom = UILabel()
         subtitleLabelBottom.text = "add personal rating"
         subtitleLabelBottom.font = UIFont.systemFont(ofSize: 12, weight: .light)
-        subtitleLabelBottom.textColor = .yellow
+        subtitleLabelBottom.textColor = .brownCustom
         subtitleLabelBottom.textAlignment = .center
         subtitleLabelBottom.backgroundColor = .black
         subtitleLabelBottom.translatesAutoresizingMaskIntoConstraints = false
@@ -242,7 +242,7 @@ class RatingButtonsView: UIView {
     private let favButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("View Favs", for: .normal)
-        button.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
+        button.titleLabel?.font = UIFont(name: "Inter", size: 16)
         button.setTitleColor(UIColor.brown, for: .normal)
         button.backgroundColor = UIColor(red: 1.0, green: 0.97, blue: 0.88, alpha: 1.0)
         button.layer.cornerRadius = 28

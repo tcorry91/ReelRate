@@ -12,7 +12,7 @@ class MovieCell: UITableViewCell {
     
     private let titleLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 18, weight: .bold)
+        label.font = UIFont(name: "Inter-Bold", size: 16)
         label.textColor = .black
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -20,7 +20,7 @@ class MovieCell: UITableViewCell {
     
     private let dateLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 13, weight: .bold)
+        label.font = UIFont(name: "Inter-Regular", size: 12)
         label.textColor = .lightGray
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "Date Label"
@@ -29,7 +29,7 @@ class MovieCell: UITableViewCell {
     
     private let userScoreLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 13, weight: .bold)
+        label.font = UIFont(name: "Inter-Bold", size: 12)
         label.textColor = .black
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "100%"
@@ -38,7 +38,7 @@ class MovieCell: UITableViewCell {
     
     private let userScoreActualLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 13, weight: .regular)
+        label.font = UIFont(name: "Inter-Regular", size: 12)
         label.textColor = .black
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "User Score"
