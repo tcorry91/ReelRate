@@ -34,20 +34,19 @@ Add user reviews and community ratings.
 Improve accessibility and support for dark mode.
 
 API Setup 🔑
-ReelRate uses the TMDb API for fetching movie data. You'll need your own API token to run the app.
-Steps to Set Up Your API Token: 
-Get your API Key:
-• Visit The Movie Database (TMDb) and sign up for a free account.
-• Go to Settings > API and generate an API key.
+ReelRate uses the TMDb API to fetch movie data. You'll need your own API Read Access Token to run the app.
 
-Create APIKeys.swift:
-• In your project, create a new file called APIKeys.swift and add the following code:
+Steps to Set Up Your API Token:
+Generate Your API Read Access Token:
 
-struct APIKeys {  
-    static let tmdbAPIKey = "YOUR_API_KEY_HERE"  
-}  
+Visit The Movie Database (TMDb) and sign up for a free account if you don't have one.
+Go to Settings > API and generate an API Read Access Token.
+Set Up Your .env File:
 
-• Replace "YOUR_API_KEY_HERE" with your actual API key.
+In your project directory, create a new .env file if it doesn't already exist.
+Add the following line to your .env file: BEARER_TOKEN=YOUR_API_READ_ACCESS_TOKEN
+
+Replace YOUR_API_READ_ACCESS_TOKEN with your actual API Read Access Token.
 
 Run the app:
 You're all set! The app will now fetch movie data using your API key.
