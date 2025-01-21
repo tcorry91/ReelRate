@@ -206,7 +206,3 @@ extension MainViewController: UITableViewDataSource {
        }
     
 }
-
-
-//TODO: testing
-//TODO: reusable labels

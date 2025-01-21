@@ -31,13 +31,11 @@ class SessionDataManager {
     
     
     func getRating(for movieID: Int) -> Int? {
-        print("Retrieved rating", movieRatings[movieID])
         return movieRatings[movieID]
     }
     
     func setRating(_ rating: Int, for movieID: Int) {
         movieRatings[movieID] = rating
-        print("Set rating: \(rating) for movie ID: \(movieID)")
     }
 
 }

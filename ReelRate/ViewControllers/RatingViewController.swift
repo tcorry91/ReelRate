@@ -133,9 +133,8 @@ class RatingViewController: UIViewController, RatingButtonsViewDelegate {
     
     private let backDropImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.contentMode = .scaleToFill
+        imageView.contentMode = .scaleAspectFit
         imageView.clipsToBounds = true
-        imageView.layer.cornerRadius = 0
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.backgroundColor = UIColor.black
         return imageView
